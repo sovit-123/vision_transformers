@@ -65,7 +65,6 @@ class Attention(nn.Module):
         qkv = self.qkv(x).reshape(
             b, n, 3, self.num_heads, c//self.num_heads
         )
-        print(qkv.shape)
         q, k, v = qkv.permute(2, 0, 3, 1, 4)
         dot = torch.matmul(q, k.transpose(-2, -1)) * self.scale
         attn = dot.softmax(dim=-1)
