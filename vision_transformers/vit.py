@@ -2,25 +2,27 @@ import torch
 import torch.nn as nn
 
 # Default values to initialize the Vision Transformer.
-# Or else pass these values while creating the model.
-IMG_SIZE = 28
-NUM_CLASSES = 10
-EMBED_DIM = 768
-MLP_RATIO = 4
-CHANNELS = 1
-PATCH_SIZE = 4
-NUM_HEADS = 4
+# Pass these values while creating the model.
+"""
+IMG_SIZE = 256
+NUM_CLASSES = 1000
+EMBED_DIM = 1024
+MLP_RATIO = 2
+CHANNELS = 3
+PATCH_SIZE = 32
+NUM_HEADS = 16
 MLP_IN_FEATURES = EMBED_DIM
-MLP_HIDDEN_FEATURES = EMBED_DIM * 4
 MLP_OUT_FEATURES = EMBED_DIM
-TRANSFORMER_DEPTH = 4
-DROPOUT = 0.0
-EMB_DROPOUT = 0.0
+TRANSFORMER_DEPTH = 6
+DROPOUT = 0.1
+EMB_DROPOUT = 0.1
+DIM_HEAD = 64
+"""
 
 # Create image patches.
 class CreatePatches(nn.Module):
     def __init__(
-        self, channels=CHANNELS, embed_dim=EMBED_DIM, path_size=PATCH_SIZE
+        self, channels=3, embed_dim=1024, path_size=32
     ):
         super().__init__()
         self.patch = nn.Conv2d(
@@ -43,20 +45,23 @@ class Attention(nn.Module):
     # https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html
     def __init__(
         self, 
-        embed_dim=EMBED_DIM, 
-        num_heads=NUM_HEADS,
-        dropout=DROPOUT
+        embed_dim=1024, 
+        num_heads=16,
+        dim_head=64,
+        dropout=0.0
     ):
         super().__init__()
         self.num_heads = num_heads
+        hidden_dim = dim_head * num_heads
+
         # Scale = 1 / sqrt(d_k).
         # https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial6/Transformers_and_MHAttention.html#Scaled-Dot-Product-Attention
         self.scale = 1. / (embed_dim ** 0.5)
         self.qkv = nn.Linear(
-            in_features=embed_dim, out_features=embed_dim*3, bias=False
+            in_features=embed_dim, out_features=hidden_dim*3, bias=False
         )
         self.out = nn.Sequential(
-            nn.Linear(in_features=embed_dim, out_features=embed_dim),
+            nn.Linear(in_features=hidden_dim, out_features=embed_dim),
             nn.Dropout(dropout)
         )
     
@@ -75,10 +80,10 @@ class Attention(nn.Module):
 class MLP(nn.Module):
     def __init__(
         self,
-        in_features=MLP_IN_FEATURES,
-        hidden_features=MLP_HIDDEN_FEATURES,
-        out_features=MLP_OUT_FEATURES,
-        dropout=DROPOUT
+        in_features,
+        hidden_features,
+        out_features,
+        dropout
     ):
         super().__init__()
         self.mlp_net = nn.Sequential(
@@ -113,13 +118,14 @@ class Normalization(nn.Module):
 class Transformer(nn.Module):
     def __init__(
         self,
-        depth=TRANSFORMER_DEPTH,
-        embed_dim=EMBED_DIM,
-        num_heads=NUM_HEADS,
-        mlp_in=MLP_IN_FEATURES,
-        mlp_hidden=MLP_HIDDEN_FEATURES,
-        mlp_out=MLP_OUT_FEATURES,
-        dropout=DROPOUT
+        depth,
+        embed_dim,
+        num_heads,
+        dim_head,
+        mlp_in,
+        mlp_hidden,
+        mlp_out,
+        dropout=0.0
     ):
         super().__init__()
         self.layers = nn.ModuleList([])
@@ -131,6 +137,7 @@ class Transformer(nn.Module):
                     Attention(
                         embed_dim=embed_dim, 
                         num_heads=num_heads,
+                        dim_head=dim_head,
                         dropout=dropout
                     )
                 ),
@@ -154,18 +161,19 @@ class Transformer(nn.Module):
 class Vit(nn.Module):
     def __init__(
         self,
-        img_size=IMG_SIZE,
-        patch_size=PATCH_SIZE,
-        in_channels=CHANNELS,
-        num_classes=NUM_CLASSES,
-        embed_dim=EMBED_DIM,
-        mlp_in=MLP_IN_FEATURES,
-        mlp_ratio=4,
-        mlp_out=MLP_OUT_FEATURES,
-        depth=TRANSFORMER_DEPTH,
-        num_heads=NUM_HEADS,
-        drop_rate=DROPOUT,
-        emb_drop_rate=EMB_DROPOUT
+        img_size,
+        patch_size,
+        in_channels,
+        num_classes,
+        embed_dim,
+        mlp_in,
+        mlp_ratio,
+        mlp_out,
+        depth,
+        num_heads,
+        dim_head=64,
+        drop_rate=0.0,
+        emb_drop_rate=0.0
     ):
         super().__init__()
         self.patch_size = patch_size
@@ -185,11 +193,14 @@ class Vit(nn.Module):
             depth=depth,
             embed_dim=embed_dim,
             num_heads=num_heads,
+            dim_head=dim_head,
             dropout=drop_rate,
             mlp_in=mlp_in,
             mlp_hidden=self.mlp_hidden,
             mlp_out=mlp_out
         )
+
+        self.latent = nn.Identity()
 
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(embed_dim),
@@ -207,23 +218,25 @@ class Vit(nn.Module):
 
         x = self.transformer(x)
 
-        # Check if we need anything for latent identity.
-        return self.mlp_head(x[:, 0])
+        x = x[:, 0]
+
+        x = self.latent(x)
+        return self.mlp_head(x)
         
 if __name__ == '__main__':
     img_size = 32
     in_channels = 3
     model = Vit(
         img_size=img_size, 
-        patch_size=4,
+        patch_size=32,
         in_channels=in_channels,
         num_classes=10,
-        embed_dim=768,
-        mlp_in=768,
+        embed_dim=1024,
+        mlp_in=1024,
         mlp_ratio=1,
-        mlp_out=768,
-        depth=4,
-        num_heads=4,
+        mlp_out=1024,
+        depth=6,
+        num_heads=16,
         drop_rate=0.0,
         emb_drop_rate=0.0
     )
