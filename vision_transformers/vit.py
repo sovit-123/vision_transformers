@@ -58,7 +58,7 @@ class Attention(nn.Module):
         # https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial6/Transformers_and_MHAttention.html#Scaled-Dot-Product-Attention
         self.scale = 1. / (embed_dim ** 0.5)
         self.qkv = nn.Linear(
-            in_features=embed_dim, out_features=hidden_dim*3, bias=False
+            in_features=embed_dim, out_features=hidden_dim*3, bias=True
         )
         self.out = nn.Sequential(
             nn.Linear(in_features=hidden_dim, out_features=embed_dim),
@@ -224,19 +224,19 @@ class Vit(nn.Module):
         return self.mlp_head(x)
         
 if __name__ == '__main__':
-    img_size = 32
+    img_size = 224
     in_channels = 3
     model = Vit(
         img_size=img_size, 
-        patch_size=32,
+        patch_size=16,
         in_channels=in_channels,
-        num_classes=10,
-        embed_dim=1024,
-        mlp_in=1024,
-        mlp_ratio=1,
-        mlp_out=1024,
-        depth=6,
-        num_heads=16,
+        num_classes=1000,
+        embed_dim=768,
+        mlp_in=768,
+        mlp_ratio=4,
+        mlp_out=768,
+        depth=12,
+        num_heads=12,
         drop_rate=0.0,
         emb_drop_rate=0.0
     )
