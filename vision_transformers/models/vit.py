@@ -89,10 +89,11 @@ class ViT(nn.Module):
         return self.mlp_head(x)
 
 def vit_b_16(
+    image_size=224,
     num_classes=1000
 ):
     return ViT(
-        img_size=224, 
+        img_size=image_size, 
         patch_size=16,
         in_channels=3,
         num_classes=num_classes,
@@ -107,10 +108,11 @@ def vit_b_16(
     )
 
 def vit_b_32(
+    image_size=224,
     num_classes=1000
 ):
     return ViT(
-        img_size=224, 
+        img_size=image_size, 
         patch_size=32,
         in_channels=3,
         num_classes=num_classes,
