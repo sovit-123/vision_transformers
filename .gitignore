@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Data directories.
+data/
+example_notebooks/checkpoints
+example_notebooks/plots
+example_notebooks/results
+
+# Weight file.
+*.pth
