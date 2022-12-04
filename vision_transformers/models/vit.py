@@ -65,7 +65,7 @@ class ViT(nn.Module):
             mlp_out=mlp_out
         )
 
-        self.latent = nn.Identity()
+        # self.latent = nn.Identity()
 
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(embed_dim),
@@ -85,7 +85,7 @@ class ViT(nn.Module):
 
         x = x[:, 0]
 
-        x = self.latent(x)
+        # x = self.latent(x)
         return self.mlp_head(x)
 
 def vit_b_16(
