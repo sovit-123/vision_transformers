@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from .layers.patches import CreatePatches
 from .layers.transformer import Transformer
-from ..utils.params import params
+from ..utils import load_weights
 
 # Default values for ViT_B_16 from the paper
 # https://arxiv.org/pdf/2010.11929v2.pdf
@@ -90,9 +90,11 @@ class ViT(nn.Module):
 
 def vit_b_16(
     image_size=224,
-    num_classes=1000
+    num_classes=1000,
+    pretrained=False
 ):
-    return ViT(
+    name = 'vit_b_16'
+    model = ViT(
         img_size=image_size, 
         patch_size=16,
         in_channels=3,
@@ -106,12 +108,18 @@ def vit_b_16(
         drop_rate=0.0,
         emb_drop_rate=0.0
     )
+    if pretrained:
+        print(f"Loading {name} pretrained weights")
+        model = load_weights.load_pretrained_state_dict(model, name)
+    return model
 
 def vit_b_32(
     image_size=224,
-    num_classes=1000
+    num_classes=1000,
+    pretrained=False
 ):
-    return ViT(
+    name = 'vit_b_32'
+    model =  ViT(
         img_size=image_size, 
         patch_size=32,
         in_channels=3,
@@ -125,3 +133,4 @@ def vit_b_32(
         drop_rate=0.0,
         emb_drop_rate=0.0
     )
+    return model
