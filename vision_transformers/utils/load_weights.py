@@ -11,6 +11,8 @@ def load_pretrained_state_dict(model, model_name='vit_b_16'):
     state_dict = model.state_dict()
 
     if model_name == 'vit_b_16' or model_name == 'vit_b_32':
+        state_dict['cls_token'] = weights['class_token']
+        state_dict['pos_embedding'] = weights['encoder.pos_embedding']
         state_dict['patches.patch.weight'] = weights['conv_proj.weight']
         state_dict['patches.patch.bias'] = weights['conv_proj.bias']
         
