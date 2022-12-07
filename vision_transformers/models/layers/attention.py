@@ -18,7 +18,7 @@ class Attention(nn.Module):
 
         # Scale = 1 / sqrt(d_k).
         # https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial6/Transformers_and_MHAttention.html#Scaled-Dot-Product-Attention
-        self.scale = 1. / (embed_dim ** 0.5)
+        self.scale = 1 / (dim_head ** 0.5)
         self.qkv = nn.Linear(
             in_features=embed_dim, out_features=hidden_dim*3, bias=True
         )
