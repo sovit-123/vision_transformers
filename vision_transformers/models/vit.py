@@ -65,10 +65,10 @@ class ViT(nn.Module):
             mlp_out=mlp_out
         )
 
+        self.ln = nn.LayerNorm(embed_dim)
         self.latent = nn.Identity()
 
         self.mlp_head = nn.Sequential(
-            nn.LayerNorm(embed_dim),
             nn.Linear(embed_dim, num_classes)
         )
 
@@ -85,6 +85,7 @@ class ViT(nn.Module):
 
         x = x[:, 0]
 
+        x = self.ln(x)
         x = self.latent(x)
         return self.mlp_head(x)
 

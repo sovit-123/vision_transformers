@@ -30,10 +30,10 @@ def load_pretrained_state_dict(model, model_name='vit_b_16'):
             state_dict[f"transformer.layers.{i}.1.fn.mlp_net.3.weight"] = weights[f"encoder.layers.encoder_layer_{i}.mlp.linear_2.weight"]
             state_dict[f"transformer.layers.{i}.1.fn.mlp_net.3.bias"] = weights[f"encoder.layers.encoder_layer_{i}.mlp.linear_2.bias"]
             
-        state_dict['mlp_head.0.weight'] = weights['encoder.ln.weight']
-        state_dict['mlp_head.0.bias'] = weights['encoder.ln.bias']
+        state_dict['ln.weight'] = weights['encoder.ln.weight']
+        state_dict['ln.bias'] = weights['encoder.ln.bias']
         # MAYBE no need to load head weights.
-        state_dict['mlp_head.1.weight'] = weights['heads.head.weight']
-        state_dict['mlp_head.1.bias'] = weights['heads.head.bias']
+        state_dict['mlp_head.0.weight'] = weights['heads.head.weight']
+        state_dict['mlp_head.0.bias'] = weights['heads.head.bias']
     model.load_state_dict(state_dict)
     return model
