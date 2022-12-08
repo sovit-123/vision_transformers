@@ -37,4 +37,5 @@ class Attention(nn.Module):
         attn = dot.softmax(dim=-1)
         out = torch.matmul(attn, v)
         out = out.transpose(1, 2).reshape(b, n, c)
+        out = self.out(out)
         return out

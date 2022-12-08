@@ -94,11 +94,9 @@ class ViT(nn.Module):
         x = self.dropout(x)
 
         x = self.transformer(x)
-
-        x = x[:, 0]
-
         x = self.ln(x)
         x = self.latent(x)
+        x = x[:, 0]
         return self.mlp_head(x)
 
 def vit_b_16(
