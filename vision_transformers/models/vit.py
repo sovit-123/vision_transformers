@@ -71,9 +71,7 @@ class ViT(nn.Module):
         self.ln = nn.LayerNorm(embed_dim, eps=1e-06)
         self.latent = nn.Identity()
 
-        self.mlp_head = nn.Sequential(
-            nn.Linear(embed_dim, num_classes)
-        )
+        self.mlp_head = nn.Linear(embed_dim, num_classes)
 
         self.apply(self._init_weights)
     
