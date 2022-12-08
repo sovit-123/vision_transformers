@@ -7,7 +7,7 @@ class Attention(nn.Module):
     # https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html
     def __init__(
         self, 
-        embed_dim=1024, 
+        embed_dim=768, 
         num_heads=16,
         dim_head=64,
         dropout=0.0

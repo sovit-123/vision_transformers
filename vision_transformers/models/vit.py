@@ -51,6 +51,9 @@ class ViT(nn.Module):
         self.pos_embedding = nn.Parameter(torch.zeros(1, num_patches+1, embed_dim))
         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
 
+        nn.init.trunc_normal_(self.pos_embedding, std=0.2)
+        nn.init.trunc_normal_(self.cls_token, std=0.2)
+
         self.dropout = nn.Dropout(emb_drop_rate)
         self.mlp_hidden = mlp_in * mlp_ratio
 
@@ -65,12 +68,23 @@ class ViT(nn.Module):
             mlp_out=mlp_out
         )
 
-        self.ln = nn.LayerNorm(embed_dim)
+        self.ln = nn.LayerNorm(embed_dim, eps=1e-06)
         self.latent = nn.Identity()
 
         self.mlp_head = nn.Sequential(
             nn.Linear(embed_dim, num_classes)
         )
+
+        self.apply(self._init_weights)
+    
+    def _init_weights(self, m):
+        if isinstance(m, nn.Linear):
+            nn.init.trunc_normal_(m.weight, std=.02)
+            if isinstance(m, nn.Linear) and m.bias is not None:
+                nn.init.constant_(m.bias, 0)
+        elif isinstance(m, nn.LayerNorm):
+            nn.init.constant_(m.bias, 0)
+            nn.init.constant_(m.weight, 1.0)
 
     def forward(self, x):
         x = self.patches(x)
