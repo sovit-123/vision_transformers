@@ -99,12 +99,16 @@ class ViT(nn.Module):
         x = x[:, 0]
         return self.mlp_head(x)
 
-def vit_b_16(
+def vit_b_p16_224(
     image_size=224,
     num_classes=1000,
     pretrained=False
 ):
-    name = 'vit_b_16'
+    """
+    ViT-B/16 from https://arxiv.org/pdf/2010.11929v2.pdf.
+    Patch size = 16.
+    """
+    name = 'vit_b_p16_224'
     model = ViT(
         img_size=image_size, 
         patch_size=16,
@@ -124,12 +128,16 @@ def vit_b_16(
         model = load_weights.load_pretrained_state_dict(model, name)
     return model
 
-def vit_b_32(
+def vit_b_p32_224(
     image_size=224,
     num_classes=1000,
     pretrained=False
 ):
-    name = 'vit_b_32'
+    """
+    ViT-B/32 from https://arxiv.org/pdf/2010.11929v2.pdf.
+    Patch size  = 32.
+    """
+    name = 'vit_b_p32_224'
     model =  ViT(
         img_size=image_size, 
         patch_size=32,
@@ -141,6 +149,53 @@ def vit_b_32(
         mlp_out=768,
         depth=12,
         num_heads=12,
+        drop_rate=0.0,
+        emb_drop_rate=0.0
+    )
+    if pretrained:
+        print(f"Loading {name} pretrained weights")
+        model = load_weights.load_pretrained_state_dict(model, name)
+    return model
+
+def vit_ti_p16_224(
+    image_size=224,
+    num_classes=1000,
+    pretrained=False
+):
+    name = 'vit_ti_p16_224'
+    model = ViT(
+        img_size=image_size, 
+        patch_size=16,
+        in_channels=3,
+        num_classes=num_classes,
+        embed_dim=192,
+        mlp_in=192,
+        mlp_ratio=4,
+        mlp_out=192,
+        depth=12,
+        num_heads=3,
+        drop_rate=0.0,
+        emb_drop_rate=0.0
+    )
+    return model
+
+def vit_ti_p16_384(
+    image_size=384,
+    num_classes=1000,
+    pretrained=False
+):
+    name = 'vit_ti_p16_384'
+    model = ViT(
+        img_size=image_size, 
+        patch_size=16,
+        in_channels=3,
+        num_classes=num_classes,
+        embed_dim=192,
+        mlp_in=192,
+        mlp_ratio=4,
+        mlp_out=192,
+        depth=12,
+        num_heads=3,
         drop_rate=0.0,
         emb_drop_rate=0.0
     )
