@@ -177,6 +177,9 @@ def vit_ti_p16_224(
         drop_rate=0.0,
         emb_drop_rate=0.0
     )
+    if pretrained:
+        print(f"Loading {name} pretrained weights")
+        model = load_weights.load_pretrained_state_dict(model, name)
     return model
 
 def vit_ti_p16_384(
