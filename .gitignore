@@ -133,6 +133,8 @@ data/
 example_notebooks/checkpoints
 example_notebooks/plots
 example_notebooks/results
+# Training pipeline result directory.
+runs/
 
 # Weight file.
 *.pth
