@@ -25,14 +25,20 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     '--train-dir', 
     dest='train_dir',
-    required=True,
     help='path to training data directory'
 )
 parser.add_argument(
     '--valid-dir', 
     dest='valid_dir',
-    required=True,
     help='path to validation data directory'
+)
+parser.add_argument(
+    '--data-dir', 
+    dest='data_dir',
+    nargs='+',
+    help='path to data directory if training and validation split not present \
+          need to pass the validation percentage as well \
+          e.g. --data-dir path/to/data 0.15'
 )
 parser.add_argument(
     '-e', '--epochs', type=int, default=10,
@@ -113,15 +119,25 @@ def validate(model, testloader, criterion, class_names):
 
 if __name__ == '__main__':
     OUT_DIR = set_training_dir(args['name'])
-    # Load the training and validation datasets.
-    dataset_train, \
-        dataset_valid, \
-        train_loader, \
-        valid_loader, dataset_classes = get_dataloaders(
-            train_dir=args['train_dir'],
-            valid_dir=args['valid_dir'],
-            image_size=224
-        )
+    if args['data_dir'] == None:
+        # Load the training and validation datasets.
+        dataset_train, \
+            dataset_valid, \
+            train_loader, \
+            valid_loader, dataset_classes = get_dataloaders(
+                train_dir=args['train_dir'],
+                valid_dir=args['valid_dir'],
+                image_size=224
+            )
+    else:
+        dataset_train, \
+            dataset_valid, \
+            train_loader, \
+            valid_loader, dataset_classes = get_dataloaders(
+                data_dir=args['data_dir'][0],
+                valid_split=float(args['data_dir'][1]),
+                image_size=224
+            )
     print(f"[INFO]: Number of training images: {len(dataset_train)}")
     print(f"[INFO]: Number of validation images: {len(dataset_valid)}")
     print(f"[INFO]: Classes: {dataset_classes}")
