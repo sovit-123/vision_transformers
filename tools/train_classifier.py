@@ -2,13 +2,17 @@ import torch
 import argparse
 import torch.nn as nn
 import torch.optim as optim
-import time
 
 from tqdm import tqdm
 from utils.dataloaders import get_dataloaders
+from utils.general import (
+    SaveBestModel, 
+    save_model,
+    set_training_dir,
+    save_loss_plot,
+    save_accuracy_plot
+)
 from vision_transformers.models import vit
-
-# from utils import save_model, save_plots
 
 seed = 42
 torch.manual_seed(seed)
@@ -19,6 +23,18 @@ torch.backends.cudnn.benchmark = True
 # Construct the argument parser.
 parser = argparse.ArgumentParser()
 parser.add_argument(
+    '--train-dir', 
+    dest='train_dir',
+    required=True,
+    help='path to training data directory'
+)
+parser.add_argument(
+    '--valid-dir', 
+    dest='valid_dir',
+    required=True,
+    help='path to validation data directory'
+)
+parser.add_argument(
     '-e', '--epochs', type=int, default=10,
     help='Number of epochs to train our network for'
 )
@@ -26,6 +42,12 @@ parser.add_argument(
     '-lr', '--learning-rate', type=float,
     dest='learning_rate', default=0.001,
     help='Learning rate for training the model'
+)
+parser.add_argument(
+    '-n', '--name',
+    default=None,
+    type=str,
+    help='set result dir name in runs/training/, (default res#)'
 )
 args = vars(parser.parse_args())
 
@@ -90,13 +112,14 @@ def validate(model, testloader, criterion, class_names):
     return epoch_loss, epoch_acc
 
 if __name__ == '__main__':
+    OUT_DIR = set_training_dir(args['name'])
     # Load the training and validation datasets.
     dataset_train, \
         dataset_valid, \
         train_loader, \
         valid_loader, dataset_classes = get_dataloaders(
-            train_dir='data/plant_disease_recognition/Train/Train',
-            valid_dir='data/plant_disease_recognition/Test/Test',
+            train_dir=args['train_dir'],
+            valid_dir=args['valid_dir'],
             image_size=224
         )
     print(f"[INFO]: Number of training images: {len(dataset_train)}")
@@ -114,8 +137,11 @@ if __name__ == '__main__':
 
     # Load the model.
     model = vit.vit_ti_p16_224(image_size=224, pretrained=True)
+    # Chnage classification head according to current dataset.
     model.mlp_head = nn.Linear(
-        in_features=192, out_features=len(dataset_classes), bias=True
+        in_features=model.mlp_head.in_features, 
+        out_features=len(dataset_classes), 
+        bias=True
     )
     _ = model.to(device)
     print(model)
@@ -132,6 +158,9 @@ if __name__ == '__main__':
     # Loss function.
     criterion = nn.CrossEntropyLoss()
 
+    # Initialize SaveBestModel class
+    save_best_model = SaveBestModel()
+
     # Lists to keep track of losses and accuracies.
     train_loss, valid_loss = [], []
     train_acc, valid_acc = [], []
@@ -142,17 +171,20 @@ if __name__ == '__main__':
                                                 optimizer, criterion)
         valid_epoch_loss, valid_epoch_acc = validate(model, valid_loader,  
                                                     criterion, dataset_classes)
+        # Save the best model till now.
+        save_best_model(
+            model, valid_epoch_loss, epoch, OUT_DIR
+        )
         train_loss.append(train_epoch_loss)
         valid_loss.append(valid_epoch_loss)
         train_acc.append(train_epoch_acc)
         valid_acc.append(valid_epoch_acc)
+        # Save loss and accuracy plots.
+        save_loss_plot(OUT_DIR, train_loss, valid_loss)
+        save_accuracy_plot(OUT_DIR, train_acc, valid_acc)
+        save_model(OUT_DIR, epoch, model, optimizer, criterion)
         print(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f}")
         print(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f}")
         print('-'*50)
-        time.sleep(2)
-
-    # Save the trained model weights.
-    # save_model(epochs, model, optimizer, criterion)
-    # Save the loss and accuracy plots.
-    # save_plots(train_acc, valid_acc, train_loss, valid_loss)
+        
     print('TRAINING COMPLETE')
