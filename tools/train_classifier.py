@@ -12,6 +12,7 @@ from utils.general import (
     save_loss_plot,
     save_accuracy_plot
 )
+from utils.logging import set_log, log
 from vision_transformers.models import vit
 
 seed = 42
@@ -60,7 +61,7 @@ args = vars(parser.parse_args())
 # Training function.
 def train(model, trainloader, optimizer, criterion):
     model.train()
-    print('Training')
+    log('Training')
     train_running_loss = 0.0
     train_running_correct = 0
     counter = 0
@@ -91,7 +92,7 @@ def train(model, trainloader, optimizer, criterion):
 # Validation function.
 def validate(model, testloader, criterion, class_names):
     model.eval()
-    print('Validation')
+    log('Validation')
     valid_running_loss = 0.0
     valid_running_correct = 0
     counter = 0
@@ -119,6 +120,8 @@ def validate(model, testloader, criterion, class_names):
 
 if __name__ == '__main__':
     OUT_DIR = set_training_dir(args['name'])
+    set_log(OUT_DIR)
+
     if args['data_dir'] == None:
         # Load the training and validation datasets.
         dataset_train, \
@@ -138,18 +141,18 @@ if __name__ == '__main__':
                 valid_split=float(args['data_dir'][1]),
                 image_size=224
             )
-    print(f"[INFO]: Number of training images: {len(dataset_train)}")
-    print(f"[INFO]: Number of validation images: {len(dataset_valid)}")
-    print(f"[INFO]: Classes: {dataset_classes}")
+    log(f"[INFO]: Number of training images: {len(dataset_train)}")
+    log(f"[INFO]: Number of validation images: {len(dataset_valid)}")
+    log(f"[INFO]: Classes: {dataset_classes}")
     # Load the training and validation data loaders.
 
     # Learning_parameters. 
     lr = args['learning_rate']
     epochs = args['epochs']
     device = ('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f"Computation device: {device}")
-    print(f"Learning rate: {lr}")
-    print(f"Epochs to train for: {epochs}\n")
+    log(f"Computation device: {device}")
+    log(f"Learning rate: {lr}")
+    log(f"Epochs to train for: {epochs}\n")
 
     # Load the model.
     model = vit.vit_ti_p16_224(image_size=224, pretrained=True)
@@ -160,14 +163,14 @@ if __name__ == '__main__':
         bias=True
     )
     _ = model.to(device)
-    print(model)
+    log(model)
     
     # Total parameters and trainable parameters.
     total_params = sum(p.numel() for p in model.parameters())
-    print(f"{total_params:,} total parameters.")
+    log(f"{total_params:,} total parameters.")
     total_trainable_params = sum(
         p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"{total_trainable_params:,} training parameters.")
+    log(f"{total_trainable_params:,} training parameters.")
 
     # Optimizer.
     optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
@@ -182,7 +185,7 @@ if __name__ == '__main__':
     train_acc, valid_acc = [], []
     # Start the training.
     for epoch in range(epochs):
-        print(f"[INFO]: Epoch {epoch+1} of {epochs}")
+        log(f"[INFO]: Epoch {epoch+1} of {epochs}")
         train_epoch_loss, train_epoch_acc = train(model, train_loader, 
                                                 optimizer, criterion)
         valid_epoch_loss, valid_epoch_acc = validate(model, valid_loader,  
@@ -199,8 +202,8 @@ if __name__ == '__main__':
         save_loss_plot(OUT_DIR, train_loss, valid_loss)
         save_accuracy_plot(OUT_DIR, train_acc, valid_acc)
         save_model(OUT_DIR, epoch, model, optimizer, criterion)
-        print(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f}")
-        print(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f}")
-        print('-'*50)
+        log(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f}")
+        log(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f}")
+        log('-'*50)
         
-    print('TRAINING COMPLETE')
+    log('TRAINING COMPLETE')
