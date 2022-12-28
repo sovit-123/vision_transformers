@@ -4,7 +4,8 @@ urls = {
     'vit_b_p16_224': 'https://download.pytorch.org/models/vit_b_16-c867db91.pth',
     # 'vit_b_p16_224': 'https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_base_p16_224-80ecf9dd.pth',
     'vit_b_p32_224': 'https://download.pytorch.org/models/vit_b_32-d86f8d99.pth',
-    'vit_ti_p16_224': 'https://www.dropbox.com/s/rtdzmmnod5vzc3o/vit_tiny_patch16_224.pth?dl=1'
+    'vit_ti_p16_224': 'https://www.dropbox.com/s/rtdzmmnod5vzc3o/vit_tiny_patch16_224.pth?dl=1',
+    'vit_ti_p16_384': 'https://www.dropbox.com/s/0848g7suf3v2h0w/vit_tiny_patch16_384.pth?dl=1'
 }
 
 def load_pretrained_state_dict(model, model_name='vit_b_p16_224'):
@@ -46,7 +47,7 @@ def load_pretrained_state_dict(model, model_name='vit_b_p16_224'):
     # Model's current state dictionary.
     state_dict = model.state_dict()
 
-    if model_name == 'vit_ti_p16_224':
+    if model_name == 'vit_ti_p16_224' or model_name == 'vit_ti_p16_384':
         print('Loading timm weights')
         state_dict['cls_token'] = weights['cls_token']
         state_dict['pos_embedding'] = weights['pos_embed']
