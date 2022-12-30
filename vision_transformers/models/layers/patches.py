@@ -3,14 +3,14 @@ import torch.nn as nn
 # Create image patches.
 class CreatePatches(nn.Module):
     def __init__(
-        self, channels=3, embed_dim=768, path_size=16
+        self, channels=3, embed_dim=768, patch_size=16
     ):
         super().__init__()
         self.patch = nn.Conv2d(
             in_channels=channels, 
             out_channels=embed_dim, 
-            kernel_size=path_size,
-            stride=path_size
+            kernel_size=patch_size,
+            stride=patch_size
         )
     def forward(self, x):
         """
