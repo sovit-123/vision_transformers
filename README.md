@@ -35,6 +35,6 @@ model = vit.vit_b_p16_224(pretrained=True)
 # model = vit.vit_ti_p16_224(pretrained=True)
 ```
 
-## [Example Notebooks](https://github.com/sovit-123/vision_transformers/tree/main/example_notebooks)
+## [Examples](https://github.com/sovit-123/vision_transformers/tree/main/examples)
 
 - [ViT Base 16 | 224x224 pretrained fine-tuning on CIFAR10](https://github.com/sovit-123/vision_transformers/blob/main/example_notebooks/cifar10_vit_pretrained.ipynb)

@@ -130,9 +130,9 @@ dmypy.json
 
 # Data directories.
 data/
-example_notebooks/checkpoints
-example_notebooks/plots
-example_notebooks/results
+examples/checkpoints
+examples/plots
+examples/results
 # Training pipeline result directory.
 runs/
 
