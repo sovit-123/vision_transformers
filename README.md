@@ -49,7 +49,7 @@ model = vit.vit_b_p16_224(pretrained=True)
 * Using default video:
 
 ```
-python examples/python examples/detr_video_inference.py
+python examples/detr_video_inference.py
 ```
 
 * Using CPU only:
