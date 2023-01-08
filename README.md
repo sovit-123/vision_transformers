@@ -14,12 +14,20 @@
 
 ## Quick Setup
 
+### Stable PyPi Package
+
+```
+pip install vision-transformers==0.0.2
+```
+
+### Latest Git Updates
+
 ```
 git clone https://github.com/sovit-123/vision_transformers.git
 cd vision_transformers
 ```
 
-Installation in the environment of your choice (***PyPi package coming soon***):
+Installation in the environment of your choice:
 
 ```
 pip install .
