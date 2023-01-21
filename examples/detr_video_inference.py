@@ -136,7 +136,7 @@ def box_cxcywh_to_xyxy(x):
     return torch.stack(b, dim=1)
 
 def rescale_bboxes(out_bbox, size):
-    img_h, img_w = size
+    img_w, img_h = size
     b = box_cxcywh_to_xyxy(out_bbox)
     b = b.cpu() * torch.tensor([img_w, img_h, img_w, img_h], dtype=torch.float32)
     return b
@@ -172,7 +172,10 @@ if __name__ == '__main__':
             keep = probas.max(-1).values > 0.8
         
             # convert boxes from [0; 1] to image scales
-            bboxes_scaled = rescale_bboxes(outputs['pred_boxes'][0, keep], frame.shape[:2])
+            bboxes_scaled = rescale_bboxes(
+                outputs['pred_boxes'][0, keep], 
+                (frame.shape[1], frame.shape[0])
+            )
 
             for p, (xmin, ymin, xmax, ymax), c in zip(probas[keep], bboxes_scaled.tolist(), COLORS):
                 cl = p.argmax()
