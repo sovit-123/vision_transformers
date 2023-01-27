@@ -4,9 +4,9 @@ class MLP(nn.Module):
     def __init__(
         self,
         in_features,
-        hidden_features,
-        out_features,
-        dropout
+        hidden_features=None,
+        out_features=None,
+        dropout=0.
     ):
         super().__init__()
         self.mlp_net = nn.Sequential(
