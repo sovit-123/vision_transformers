@@ -21,10 +21,11 @@ import torch.nn as nn
 
 from .layers.attention import WindowAttention
 from .layers.drop import DropPath
-from .layers.mlp import MLP
+from .layers.mlp import Mlp
 from .layers.weight_init import trunc_normal_
 from .layers.patches import PatchEmbed
 from .layers.helpers import to_2tuple
+
 
 def window_partition(x, window_size):
     """
@@ -99,11 +100,11 @@ class SwinTransformerBlock(nn.Module):
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
         self.norm2 = norm_layer(dim)
         mlp_hidden_dim = int(dim * mlp_ratio)
-        self.mlp = MLP(
+        self.mlp = Mlp(
             in_features=dim, 
             hidden_features=mlp_hidden_dim, 
             out_features=dim,
-            dropout=drop
+            drop=drop
         )
 
         if self.shift_size > 0:
@@ -147,6 +148,8 @@ class SwinTransformerBlock(nn.Module):
         else:
             shifted_x = x
 
+        # partition windows
+        x_windows = window_partition(shifted_x, self.window_size)  # num_win*B, window_size, window_size, C
         x_windows = x_windows.view(-1, self.window_size * self.window_size, C)  # nW*B, window_size*window_size, C
 
         # W-MSA/SW-MSA
@@ -434,38 +437,77 @@ class SwinTransformer(nn.Module):
         flops += self.num_features * self.num_classes
         return flops
 
-def swin_b_p4_w7_224():
+def swin_b_p4_w7_224(
+    image_size=224,
+    num_classes=1000,
+    pretrained=False
+):
     model = SwinTransformer(
+        image_size=image_size,
+        num_classes=num_classes,
         patch_size=4, 
         window_size=7, 
         embed_dim=128,
         depths=(2, 2, 18, 2),
         num_heads=(4, 8, 16, 32),
     )
+    if pretrained:
+        weights = torch.hub.load_state_dict_from_url(
+            'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_base_patch4_window7_224.pth'
+        )
+        model.load_state_dict(weights['model'])
     return model
 
-def swin_t_p4_w7_224():
+def swin_t_p4_w7_224(
+    image_size=224,
+    num_classes=1000,
+    pretrained=False
+):
     model = SwinTransformer(
+        image_size=image_size,
+        num_classes=num_classes,
         patch_size=4, 
         window_size=7, 
         embed_dim=96,
         depths=(2, 2, 6, 2),
         num_heads=(3, 6, 12, 24),
     )
+    if pretrained:
+        weights = torch.hub.load_state_dict_from_url(
+            'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'
+        )
+        model.load_state_dict(weights['model'])
     return model
 
-def swin_s_p4_w7_224():
+def swin_s_p4_w7_224(
+    image_size=224,
+    num_classes=1000,
+    pretrained=False
+):
     model = SwinTransformer(
+        image_size=image_size,
+        num_classes=num_classes,
         patch_size=4, 
         window_size=7, 
         embed_dim=96,
         depths=(2, 2, 18, 2),
         num_heads=(3, 6, 12, 24),
     )
+    if pretrained:
+        weights = torch.hub.load_state_dict_from_url(
+            'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_small_patch4_window7_224.pth'
+        )
+        model.load_state_dict(weights['model'])
     return model
 
-def swin_l_p4_w7_224():
+def swin_l_p4_w7_224(
+    image_size=224,
+    num_classes=1000,
+    pretrained=False
+):
     model = SwinTransformer(
+        image_size=image_size,
+        num_classes=num_classes,
         patch_size=4, 
         window_size=7, 
         embed_dim=192,
