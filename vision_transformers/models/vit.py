@@ -113,7 +113,7 @@ def vit_b_p16_224(
         img_size=image_size, 
         patch_size=16,
         in_channels=3,
-        num_classes=num_classes,
+        num_classes=1000,
         embed_dim=768,
         mlp_in=768,
         mlp_ratio=4,
@@ -126,6 +126,12 @@ def vit_b_p16_224(
     if pretrained:
         print(f"Loading {name} pretrained weights")
         model = load_weights.load_pretrained_state_dict(model, name)
+    
+    model.mlp_head = nn.Linear(
+        in_features=model.mlp_head.in_features, 
+        out_features=num_classes, 
+        bias=True
+    )
     return model
 
 def vit_b_p32_224(
@@ -142,7 +148,7 @@ def vit_b_p32_224(
         img_size=image_size, 
         patch_size=32,
         in_channels=3,
-        num_classes=num_classes,
+        num_classes=1000,
         embed_dim=768,
         mlp_in=768,
         mlp_ratio=4,
@@ -155,6 +161,12 @@ def vit_b_p32_224(
     if pretrained:
         print(f"Loading {name} pretrained weights")
         model = load_weights.load_pretrained_state_dict(model, name)
+
+    model.mlp_head = nn.Linear(
+        in_features=model.mlp_head.in_features, 
+        out_features=num_classes, 
+        bias=True
+    )
     return model
 
 def vit_ti_p16_224(
@@ -167,7 +179,7 @@ def vit_ti_p16_224(
         img_size=image_size, 
         patch_size=16,
         in_channels=3,
-        num_classes=num_classes,
+        num_classes=1000,
         embed_dim=192,
         mlp_in=192,
         mlp_ratio=4,
@@ -180,6 +192,11 @@ def vit_ti_p16_224(
     if pretrained:
         print(f"Loading {name} pretrained weights")
         model = load_weights.load_pretrained_state_dict(model, name)
+    model.mlp_head = nn.Linear(
+        in_features=model.mlp_head.in_features, 
+        out_features=num_classes, 
+        bias=True
+    )
     return model
 
 def vit_ti_p16_384(
@@ -192,7 +209,7 @@ def vit_ti_p16_384(
         img_size=image_size, 
         patch_size=16,
         in_channels=3,
-        num_classes=num_classes,
+        num_classes=1000,
         embed_dim=192,
         mlp_in=192,
         mlp_ratio=4,
@@ -205,4 +222,10 @@ def vit_ti_p16_384(
     if pretrained:
         print(f"Loading {name} pretrained weights")
         model = load_weights.load_pretrained_state_dict(model, name)
+
+    model.mlp_head = nn.Linear(
+        in_features=model.mlp_head.in_features, 
+        out_features=num_classes, 
+        bias=True
+    )
     return model

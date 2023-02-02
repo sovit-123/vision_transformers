@@ -444,7 +444,7 @@ def swin_b_p4_w7_224(
 ):
     model = SwinTransformer(
         image_size=image_size,
-        num_classes=num_classes,
+        num_classes=1000,
         patch_size=4, 
         window_size=7, 
         embed_dim=128,
@@ -456,6 +456,12 @@ def swin_b_p4_w7_224(
             'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_base_patch4_window7_224.pth'
         )
         model.load_state_dict(weights['model'])
+
+    model.head = nn.Linear(
+        in_features=model.head.in_features, 
+        out_features=num_classes, 
+        bias=True
+    )
     return model
 
 def swin_t_p4_w7_224(
@@ -465,7 +471,7 @@ def swin_t_p4_w7_224(
 ):
     model = SwinTransformer(
         image_size=image_size,
-        num_classes=num_classes,
+        num_classes=1000,
         patch_size=4, 
         window_size=7, 
         embed_dim=96,
@@ -477,6 +483,11 @@ def swin_t_p4_w7_224(
             'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'
         )
         model.load_state_dict(weights['model'])
+    model.head = nn.Linear(
+        in_features=model.head.in_features, 
+        out_features=num_classes, 
+        bias=True
+    )
     return model
 
 def swin_s_p4_w7_224(
@@ -486,7 +497,7 @@ def swin_s_p4_w7_224(
 ):
     model = SwinTransformer(
         image_size=image_size,
-        num_classes=num_classes,
+        num_classes=1000,
         patch_size=4, 
         window_size=7, 
         embed_dim=96,
@@ -498,6 +509,11 @@ def swin_s_p4_w7_224(
             'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_small_patch4_window7_224.pth'
         )
         model.load_state_dict(weights['model'])
+    model.head = nn.Linear(
+        in_features=model.head.in_features, 
+        out_features=num_classes, 
+        bias=True
+    )
     return model
 
 def swin_l_p4_w7_224(
@@ -507,7 +523,7 @@ def swin_l_p4_w7_224(
 ):
     model = SwinTransformer(
         image_size=image_size,
-        num_classes=num_classes,
+        num_classes=1000,
         patch_size=4, 
         window_size=7, 
         embed_dim=192,
