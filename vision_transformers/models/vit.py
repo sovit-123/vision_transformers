@@ -110,7 +110,7 @@ def vit_b_p16_224(
     """
     name = 'vit_b_p16_224'
     model = ViT(
-        img_size=image_size, 
+        img_size=224, 
         patch_size=16,
         in_channels=3,
         num_classes=1000,
@@ -145,7 +145,7 @@ def vit_b_p32_224(
     """
     name = 'vit_b_p32_224'
     model =  ViT(
-        img_size=image_size, 
+        img_size=224, 
         patch_size=32,
         in_channels=3,
         num_classes=1000,
@@ -176,7 +176,7 @@ def vit_ti_p16_224(
 ):
     name = 'vit_ti_p16_224'
     model = ViT(
-        img_size=image_size, 
+        img_size=224, 
         patch_size=16,
         in_channels=3,
         num_classes=1000,
@@ -206,7 +206,7 @@ def vit_ti_p16_384(
 ):
     name = 'vit_ti_p16_384'
     model = ViT(
-        img_size=image_size, 
+        img_size=384, 
         patch_size=16,
         in_channels=3,
         num_classes=1000,
@@ -219,6 +219,7 @@ def vit_ti_p16_384(
         drop_rate=0.0,
         emb_drop_rate=0.0
     )
+    print(model)
     if pretrained:
         print(f"Loading {name} pretrained weights")
         model = load_weights.load_pretrained_state_dict(model, name)

@@ -530,4 +530,9 @@ def swin_l_p4_w7_224(
         depths=(2, 2, 18, 2),
         num_heads=(6, 12, 18, 48),
     )
+    model.head = nn.Linear(
+        in_features=model.head.in_features, 
+        out_features=num_classes, 
+        bias=True
+    )
     return model

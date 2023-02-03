@@ -12,6 +12,7 @@ from utils.general import (
     save_loss_plot,
     save_accuracy_plot
 )
+from utils.load_model import create_model
 from utils.logging import set_log, log
 from vision_transformers.models import vit
 
@@ -23,6 +24,11 @@ torch.backends.cudnn.benchmark = True
 
 # Construct the argument parser.
 parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--model',
+    dest='model',
+    default='vit_b_p16_224'
+)
 parser.add_argument(
     '--train-dir', 
     dest='train_dir',
@@ -56,7 +62,7 @@ parser.add_argument(
     type=str,
     help='set result dir name in runs/training/, (default res#)'
 )
-args = vars(parser.parse_args())
+args = parser.parse_args()
 
 # Training function.
 def train(model, trainloader, optimizer, criterion):
@@ -119,17 +125,17 @@ def validate(model, testloader, criterion, class_names):
     return epoch_loss, epoch_acc
 
 if __name__ == '__main__':
-    OUT_DIR = set_training_dir(args['name'])
+    OUT_DIR = set_training_dir(args.name)
     set_log(OUT_DIR)
 
-    if args['data_dir'] == None:
+    if args.data_dir == None:
         # Load the training and validation datasets.
         dataset_train, \
             dataset_valid, \
             train_loader, \
             valid_loader, dataset_classes = get_dataloaders(
-                train_dir=args['train_dir'],
-                valid_dir=args['valid_dir'],
+                train_dir=args.train_dir,
+                valid_dir=args.valid_dir,
                 image_size=224
             )
     else:
@@ -137,8 +143,8 @@ if __name__ == '__main__':
             dataset_valid, \
             train_loader, \
             valid_loader, dataset_classes = get_dataloaders(
-                data_dir=args['data_dir'][0],
-                valid_split=float(args['data_dir'][1]),
+                data_dir=args.data_dir[0],
+                valid_split=float(args.data_dir[1]),
                 image_size=224
             )
     log(f"[INFO]: Number of training images: {len(dataset_train)}")
@@ -147,20 +153,17 @@ if __name__ == '__main__':
     # Load the training and validation data loaders.
 
     # Learning_parameters. 
-    lr = args['learning_rate']
-    epochs = args['epochs']
+    lr = args.learning_rate
+    epochs = args.epochs
     device = ('cuda' if torch.cuda.is_available() else 'cpu')
     log(f"Computation device: {device}")
     log(f"Learning rate: {lr}")
     log(f"Epochs to train for: {epochs}\n")
 
     # Load the model.
-    model = vit.vit_ti_p16_224(image_size=224, pretrained=True)
-    # Chnage classification head according to current dataset.
-    model.mlp_head = nn.Linear(
-        in_features=model.mlp_head.in_features, 
-        out_features=len(dataset_classes), 
-        bias=True
+    build_model = create_model[args.model]
+    model = build_model(
+        image_size=224, num_classes=len(dataset_classes), pretrained=True
     )
     _ = model.to(device)
     log(model)
