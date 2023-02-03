@@ -528,7 +528,7 @@ def swin_l_p4_w7_224(
         window_size=7, 
         embed_dim=192,
         depths=(2, 2, 18, 2),
-        num_heads=(6, 12, 18, 48),
+        num_heads=(6, 12, 24, 48),
     )
     model.head = nn.Linear(
         in_features=model.head.in_features, 

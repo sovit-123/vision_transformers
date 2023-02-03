@@ -74,22 +74,44 @@ cd vision_transformers
 pip install .
 ```
 
-* From the `vision_transformers` directory:
+From the `vision_transformers` directory:
 
-  If you have no validation split
+* If you have no validation split
 
 ```
 python tools/train_classifier.py --data data/diabetic_retinopathy/colored_images/ 0.15 --epochs 5 --model vit_ti_p16_224
-										|_______________________________________| |__|
-												Path to data directory			  validation
-                                                 with class folders				  split	
 ```
 
-​		If you have validation split
+* In the above command:
+
+  * `data/diabetic_retinopathy/colored_images/` represents the data folder where the images will be inside the respective class folders
+
+  * `0.15` represents the validation split as the dataset does not contain a validation folder
+
+* If you have validation split
 
 ```
 python tools/train_classifier.py --train-dir data/plant_disease_recognition/train/ --valid-dir data/plant_disease_recognition/valid/ --epochs 5 --model vit_ti_p16_224
 ```
+
+* In the above command:
+  * `--train-dir` should be path to the training directory where the images will be inside their respective class folders.
+  * `valid-dir` should be path to the validation directory where the images will be inside their respective class folders.
+
+### All Available Model Flags for `--model`
+
+```
+vit_b_p32_224
+vit_ti_p16_224
+vit_ti_p16_384
+vit_b_p16_224
+swin_b_p4_w7_224
+swin_t_p4_w7_224
+swin_s_p4_w7_224
+swin_l_p4_w7_224
+```
+
+
 
 ## [Examples](https://github.com/sovit-123/vision_transformers/tree/main/examples)
 
