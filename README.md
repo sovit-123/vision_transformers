@@ -42,12 +42,14 @@ pip install .
 
 ### If you have you own training pipeline and just want the model
 
+**Replace `num_classes=1000`** **with you own number of classes**.
+
 ```python
 from vision_transformers.models import vit
 
-model = vit.vit_b_p16_224(pretrained=True)
-# model = vit.vit_b_p32_224(pretrained=True)
-# model = vit.vit_ti_p16_224(pretrained=True)
+model = vit.vit_b_p16_224(num_classes=1000, pretrained=True)
+# model = vit.vit_b_p32_224(num_classes=1000, pretrained=True)
+# model = vit.vit_ti_p16_224(num_classes=1000, pretrained=True)
 ```
 
 ```python
