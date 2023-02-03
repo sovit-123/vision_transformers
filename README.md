@@ -10,6 +10,10 @@
   - ViT Base Patch 32 | 224x224: Torchvision pretrained weights
   - ViT Tiny Patch 16 | 224x224: Timm pretrained weights
   - Vit Tiny Patch 16 | 384x384: Timm pretrained weights
+  - Swin Transformer Tiny Patch 4 Window 7 | 224x224: Official Microsoft weights
+  - Swin Transformer Small Patch 4 Window 7 | 224x224: Official Microsoft weights
+  - Swin Transformer Base Patch 4 Window 7 | 224x224: Official Microsoft weights
+  - Swin Transformer Large Patch 4 Window 7 | 224x224: No pretrained weights
 
 ## Quick Setup
 
