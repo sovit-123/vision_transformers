@@ -1,11 +1,15 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name = 'vision_transformers',
     packages = find_packages(),
-    version = '0.0.3',
+    version = '0.0.3.2',
     license = 'MIT',
     description = 'Vision Transformers (ViT)',
+    long_description = long_description,
     long_description_content_type = 'text/markdown',
     author = 'Sovit Rath',
     author_email = 'sovitrath5@gmail.com',

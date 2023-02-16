@@ -20,7 +20,7 @@
 ### Stable PyPi Package
 
 ```
-pip install vision-transformers==0.0.2
+pip install vision-transformers
 ```
 
 ### OR
