@@ -2,6 +2,8 @@
 
 ***A repository for everything Vision Transformers.***
 
+![](readme_images/detr_infer.gif)
+
 ## Currently Supported Models
 
 - Image Classification

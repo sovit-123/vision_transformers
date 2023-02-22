@@ -4,6 +4,7 @@ import torchvision.transforms as T
 import numpy as np
 import time
 import argparse
+import os
 
 from torch import nn
 from torchvision.models import resnet50
@@ -142,7 +143,19 @@ def rescale_bboxes(out_bbox, size):
     return b
 
 if __name__ == '__main__':
+    out_dir = os.path.join('examples', 'results', 'detr_infer') 
+    os.makedirs(out_dir, exist_ok=True)  
+
     cap = cv2.VideoCapture(args.input)
+
+    frame_width = int(cap.get(3))
+    frame_height = int(cap.get(4))
+
+    save_name = args.input.split(os.path.sep)[-1].split('.')[0]
+    # Define codec and create VideoWriter object.
+    out = cv2.VideoWriter(f"{out_dir}/{save_name}.mp4", 
+                        cv2.VideoWriter_fourcc(*'mp4v'), 30, 
+                        (frame_width, frame_height))
 
     frame_count = 0 # To count total frames.
     total_fps = 0 # To get the final frames per second.
@@ -209,6 +222,7 @@ if __name__ == '__main__':
                 thickness=1, 
                 lineType=cv2.LINE_AA
             )
+            out.write(frame)
             cv2.imshow('Image', frame)
             # Press `q` to exit
             if cv2.waitKey(1) & 0xFF == ord('q'):
