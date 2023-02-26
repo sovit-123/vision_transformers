@@ -138,3 +138,5 @@ runs/
 
 # Weight file.
 *.pth
+*.pt
+weights/
