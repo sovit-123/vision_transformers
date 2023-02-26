@@ -498,7 +498,7 @@ def mobilevit_s():
     model_name = 'mobilevit_s'
     opts = Namespace(model_name = model_name)
     model = MobileViT(opts=opts)
-    ckpt = torch.load('/mnt/wwn-0x500a0751e6282b63-part2/my_data/Data_Science/Projects/Computer_Vision/vision_transformers/vision_transformers/weights/mobilevit_s.pt')
-    model.load_state_dict(ckpt, strict=False)
+    # ckpt = torch.load('/mnt/wwn-0x500a0751e6282b63-part2/my_data/Data_Science/Projects/Computer_Vision/vision_transformers/vision_transformers/weights/mobilevit_s.pt')
+    # model.load_state_dict(ckpt, strict=False)
     print(model)
     return model
