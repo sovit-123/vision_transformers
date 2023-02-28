@@ -486,19 +486,232 @@ mobilevit_s_cfg = {
     "last_layer_exp_factor": 4
 }
 
+mobilevit_xs_cfg = {
+    "layer1": {
+        "out_channels": 32,
+        "expand_ratio": 4,
+        "num_blocks": 1,
+        "stride": 1,
+        "block_type": "mv2"
+    },
+    "layer2": {
+        "out_channels": 48,
+        "expand_ratio": 4,
+        "num_blocks": 3,
+        "stride": 2,
+        "block_type": "mv2"
+    },
+    "layer3": {  # 28x28
+        "out_channels": 64,
+        "transformer_channels": 96,
+        "ffn_dim": 192,
+        "transformer_blocks": 2,
+        "patch_h": 2,
+        "patch_w": 2,
+        "stride": 2,
+        "mv_expand_ratio": 4,
+        "num_heads": 4,
+        "block_type": "mobilevit"
+    },
+    "layer4": {  # 14x14
+        "out_channels": 80,
+        "transformer_channels": 120,
+        "ffn_dim": 240,
+        "transformer_blocks": 4,
+        "patch_h": 2, 
+        "patch_w": 2, 
+        "stride": 2,
+        "mv_expand_ratio": 4,
+        "num_heads": 4,
+        "block_type": "mobilevit"
+    },
+    "layer5": {  # 7x7
+        "out_channels": 96,
+        "transformer_channels": 144,
+        "ffn_dim": 288,
+        "transformer_blocks": 3,
+        "patch_h": 2,
+        "patch_w": 2,
+        "stride": 2,
+        "mv_expand_ratio": 4,
+        "num_heads": 4,
+        "block_type": "mobilevit"
+    },
+    "last_layer_exp_factor": 4
+}
+
+mobilevit_mini_cfg = {
+    "layer1": {
+        "out_channels": 32,
+        "expand_ratio": 4,
+        "num_blocks": 1,
+        "stride": 1,
+        "block_type": "mv2"
+    },
+    "layer2": {
+        "out_channels": 48,
+        "expand_ratio": 4,
+        "num_blocks": 3,
+        "stride": 2,
+        "block_type": "mv2"
+    },
+    "layer3": {  # 28x28
+        "out_channels": 64,
+        "transformer_channels": 80,
+        "ffn_dim": 160,
+        "transformer_blocks": 2,
+        "patch_h": 2,
+        "patch_w": 2,
+        "stride": 2,
+        "mv_expand_ratio": 4,
+        "num_heads": 4,
+        "block_type": "mobilevit"
+    },
+    "layer4": {  # 14x14
+        "out_channels": 80,
+        "transformer_channels": 96,
+        "ffn_dim": 192,
+        "transformer_blocks": 4,
+        "patch_h": 2, 
+        "patch_w": 2, 
+        "stride": 2,
+        "mv_expand_ratio": 4,
+        "num_heads": 4,
+        "block_type": "mobilevit"
+    },
+    "layer5": {  # 7x7
+        "out_channels": 96,
+        "transformer_channels": 128,
+        "ffn_dim": 256,
+        "transformer_blocks": 3,
+        "patch_h": 2,
+        "patch_w": 2,
+        "stride": 2,
+        "mv_expand_ratio": 4,
+        "num_heads": 4,
+        "block_type": "mobilevit"
+    },
+    "last_layer_exp_factor": 4
+}
+
+mobilevit_xxs_cfg = {
+    "layer1": {
+        "out_channels": 16,
+        "expand_ratio": 2,
+        "num_blocks": 1,
+        "stride": 1,
+        "block_type": "mv2"
+    },
+    "layer2": {
+        "out_channels": 24,
+        "expand_ratio": 2,
+        "num_blocks": 3,
+        "stride": 2,
+        "block_type": "mv2"
+    },
+    "layer3": {  # 28x28
+        "out_channels": 48,
+        "transformer_channels": 64,
+        "ffn_dim": 128,
+        "transformer_blocks": 2,
+        "patch_h": 2,
+        "patch_w": 2,
+        "stride": 2,
+        "mv_expand_ratio": 2,
+        "num_heads": 4,
+        "block_type": "mobilevit"
+    },
+    "layer4": {  # 14x14
+        "out_channels": 64,
+        "transformer_channels": 80,
+        "ffn_dim": 160,
+        "transformer_blocks": 4,
+        "patch_h": 2, 
+        "patch_w": 2, 
+        "stride": 2,
+        "mv_expand_ratio": 2,
+        "num_heads": 4,
+        "block_type": "mobilevit"
+    },
+    "layer5": {  # 7x7
+        "out_channels": 80,
+        "transformer_channels": 96,
+        "ffn_dim": 192,
+        "transformer_blocks": 3,
+        "patch_h": 2,
+        "patch_w": 2,
+        "stride": 2,
+        "mv_expand_ratio": 2,
+        "num_heads": 4,
+        "block_type": "mobilevit"
+    },
+    "last_layer_exp_factor": 4
+}
 
 model_cfg = {
-    # 'mobilevit_xxs': mobilevit_xxs_cfg, 
-    # 'mobilevit_mini': mobilevit_mini_cfg,
-    # 'mobilevit_xs': mobilevit_xs_cfg, 
+    'mobilevit_xxs': mobilevit_xxs_cfg, 
+    'mobilevit_mini': mobilevit_mini_cfg,
+    'mobilevit_xs': mobilevit_xs_cfg, 
     'mobilevit_s': mobilevit_s_cfg, 
     }
 
-def mobilevit_s():
+def mobilevit_s(num_classes=1000, pretrained=False):
     model_name = 'mobilevit_s'
     opts = Namespace(model_name = model_name)
     model = MobileViT(opts=opts)
-    # ckpt = torch.load('/mnt/wwn-0x500a0751e6282b63-part2/my_data/Data_Science/Projects/Computer_Vision/vision_transformers/vision_transformers/weights/mobilevit_s.pt')
-    # model.load_state_dict(ckpt, strict=False)
-    print(model)
+    if pretrained:
+        ckpt = torch.hub.load_state_dict_from_url(
+            'https://docs-assets.developer.apple.com/ml-research/models/cvnets/classification/mobilevit_s.pt'
+        )
+        model.load_state_dict(ckpt, strict=False)
+
+    in_features = model.classifier.fc.in_features
+    model.classifier.fc = nn.Linear(
+        in_features=in_features, out_features=num_classes, bias=True
+    )
+    return model
+
+def mobilevit_xs(num_classes=1000, pretrained=False):
+    model_name = 'mobilevit_xs'
+    opts = Namespace(model_name = model_name)
+    model = MobileViT(opts=opts)
+    if pretrained:
+        ckpt = torch.hub.load_state_dict_from_url(
+            'https://docs-assets.developer.apple.com/ml-research/models/cvnets/classification/mobilevit_xs.pt'
+        )
+        model.load_state_dict(ckpt, strict=False)
+    in_features = model.classifier.fc.in_features
+    model.classifier.fc = nn.Linear(
+        in_features=in_features, out_features=num_classes, bias=True
+    )
+    return model
+
+def mobilevit_mini(num_classes=1000, pretrained=False):
+    model_name = 'mobilevit_mini'
+    opts = Namespace(model_name = model_name)
+    model = MobileViT(opts=opts)
+    if pretrained:
+        ckpt = torch.hub.load_state_dict_from_url(
+            'https://github.com/kennethzhao24/mobilevit_pytorch/blob/main/weights/mobilevit_mini.pt'
+        )
+        model.load_state_dict(ckpt, strict=False)
+    in_features = model.classifier.fc.in_features
+    model.classifier.fc = nn.Linear(
+        in_features=in_features, out_features=num_classes, bias=True
+    )
+    return model
+
+def mobilevit_xxs(num_classes=1000, pretrained=False):
+    model_name = 'mobilevit_xxs'
+    opts = Namespace(model_name = model_name)
+    model = MobileViT(opts=opts)
+    if pretrained:
+        ckpt = torch.hub.load_state_dict_from_url(
+            'https://docs-assets.developer.apple.com/ml-research/models/cvnets/classification/mobilevit_xxs.pt'
+        )
+        model.load_state_dict(ckpt, strict=False)
+    in_features = model.classifier.fc.in_features
+    model.classifier.fc = nn.Linear(
+        in_features=in_features, out_features=num_classes, bias=True
+    )
     return model
