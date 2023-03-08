@@ -1,9 +1,9 @@
 """
-Modules borrowed from https://github.com/kennethzhao24/mobilevit_pytorch
+Modules adapted/borrowed from https://github.com/kennethzhao24/mobilevit_pytorch
 for easier loading of official weights.
 Official code and weights: https://github.com/apple/ml-cvnets
 
-Adapted by Sovit Ranjan Rath.
+Put together by Sovit Ranjan Rath.
 """
 
 import torch.nn as nn
