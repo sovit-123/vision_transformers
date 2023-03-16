@@ -24,6 +24,7 @@ from utils.detection.utils.general import (
     save_mAP,
     show_tranformed_image
 )
+from utils.detection.utils.logging import set_log, coco_log
 
 RANK = int(os.getenv('RANK', -1))
 
@@ -167,6 +168,7 @@ def main(args):
     VISUALIZE_TRANSFORMED_IMAGES = args.vis_transformed
     OUT_DIR = set_training_dir(args.name)
     COLORS = np.random.uniform(0, 1, size=(len(CLASSES), 3))
+    set_log(OUT_DIR)
     train_dataset = create_train_dataset(
         TRAIN_DIR_IMAGES, 
         TRAIN_DIR_LABELS,
@@ -276,6 +278,9 @@ def main(args):
             device=DEVICE, 
             output_dir='outputs'
         )
+        
+        # COCO log to train log file.
+        coco_log(OUT_DIR, stats)
 
         val_map_05.append(stats['coco_eval_bbox'][1])
         val_map.append(stats['coco_eval_bbox'][0])
