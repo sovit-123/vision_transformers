@@ -184,38 +184,38 @@ def show_tranformed_image(train_loader, device, classes, colors):
 def set_training_dir(dir_name=None):
     """
     This functions counts the number of training directories already present
-    and creates a new one in `outputs/training/`. 
+    and creates a new one in `runs/training/`. 
     And returns the directory path.
     """
-    if not os.path.exists('outputs/training'):
-        os.makedirs('outputs/training')
+    if not os.path.exists('runs/training'):
+        os.makedirs('runs/training')
     if dir_name:
-        new_dir_name = f"outputs/training/{dir_name}"
+        new_dir_name = f"runs/training/{dir_name}"
         os.makedirs(new_dir_name, exist_ok=True)
         return new_dir_name
     else:
-        num_train_dirs_present = len(os.listdir('outputs/training/'))
+        num_train_dirs_present = len(os.listdir('runs/training/'))
         next_dir_num = num_train_dirs_present + 1
-        new_dir_name = f"outputs/training/res_{next_dir_num}"
+        new_dir_name = f"runs/training/res_{next_dir_num}"
         os.makedirs(new_dir_name, exist_ok=True)
         return new_dir_name
 
 def set_infer_dir(dir_name=None):
     """
     This functions counts the number of inference directories already present
-    and creates a new one in `outputs/inference/`. 
+    and creates a new one in `runs/inference/`. 
     And returns the directory path.
     """
-    if not os.path.exists('outputs/inference'):
-        os.makedirs('outputs/inference')
+    if not os.path.exists('runs/inference'):
+        os.makedirs('runs/inference')
     if dir_name:
-        new_dir_name = f"outputs/inference/{dir_name}"
+        new_dir_name = f"runs/inference/{dir_name}"
         os.makedirs(new_dir_name, exist_ok=True)
         return new_dir_name
     else:
-        num_infer_dirs_present = len(os.listdir('outputs/inference/'))
+        num_infer_dirs_present = len(os.listdir('runs/inference/'))
         next_dir_num = num_infer_dirs_present + 1
-        new_dir_name = f"outputs/inference/res_{next_dir_num}"
+        new_dir_name = f"runs/inference/res_{next_dir_num}"
         os.makedirs(new_dir_name, exist_ok=True)
         return new_dir_name
 

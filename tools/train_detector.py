@@ -57,7 +57,7 @@ def parse_opt():
         '--name', 
         default=None, 
         type=str, 
-        help='training result dir name in outputs/training/, (default res_#)'
+        help='training result dir name in runs/training/, (default res_#)'
     )
     parser.add_argument(
         '-ims', '--img-size',

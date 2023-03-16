@@ -48,13 +48,23 @@ parser.add_argument(
           e.g. --data-dir path/to/data 0.15'
 )
 parser.add_argument(
-    '-e', '--epochs', type=int, default=10,
+    '-e', '--epochs', 
+    type=int, 
+    default=10,
     help='Number of epochs to train our network for'
 )
 parser.add_argument(
-    '-lr', '--learning-rate', type=float,
-    dest='learning_rate', default=0.001,
+    '-lr', '--learning-rate', 
+    type=float,
+    dest='learning_rate', 
+    default=0.001,
     help='Learning rate for training the model'
+)
+parser.add_argument(
+    '-b', '--batch',
+    default=32,
+    type=int,
+    help='batch size for data loader'
 )
 parser.add_argument(
     '-n', '--name',
@@ -136,6 +146,7 @@ if __name__ == '__main__':
             valid_loader, dataset_classes = get_dataloaders(
                 train_dir=args.train_dir,
                 valid_dir=args.valid_dir,
+                batch_size=args.batch,
                 image_size=224
             )
     else:
@@ -145,6 +156,7 @@ if __name__ == '__main__':
             valid_loader, dataset_classes = get_dataloaders(
                 data_dir=args.data_dir[0],
                 valid_split=float(args.data_dir[1]),
+                batch_size=args.batch,
                 image_size=224
             )
     log(f"[INFO]: Number of training images: {len(dataset_train)}")
