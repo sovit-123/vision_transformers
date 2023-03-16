@@ -248,16 +248,6 @@ def main(args):
     } for k,v in model.parameter_groups().items()], 
         weight_decay=args.weight_decay
     )
-
-    # param_dicts = [
-    #     {"params": [p for n, p in model.named_parameters() if "backbone" not in n and p.requires_grad]},
-    #     {
-    #         "params": [p for n, p in model.named_parameters() if "backbone" in n and p.requires_grad],
-    #         "lr": args.lr_backbone,
-    #     },
-    # ]
-    # optimizer = torch.optim.AdamW(param_dicts, lr=args.learning_rate,
-    #                               weight_decay=args.weight_decay)
     
     save_best_model = SaveBestModel()
 
