@@ -1,0 +1,5 @@
+albumentations>=1.1.0
+torchinfo
+
+# Extras-----------------------------------
+pycocotools>=2.0.2
