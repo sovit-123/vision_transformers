@@ -198,6 +198,10 @@ if __name__ == '__main__':
     # Lists to keep track of losses and accuracies.
     train_loss, valid_loss = [], []
     train_acc, valid_acc = [], []
+
+    if torch.__version__ >= '2.0.0':
+        model = torch.compile(model)
+
     # Start the training.
     for epoch in range(epochs):
         log(f"[INFO]: Epoch {epoch+1} of {epochs}")

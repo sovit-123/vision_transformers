@@ -266,6 +266,9 @@ def main(args):
     val_map_05 = []
     val_map = []
 
+    if torch.__version__ >= '2.0.0':
+        model = torch.compile(model)
+
     for epoch in range(EPOCHS):
         train_loss = train(
             train_loader, 
