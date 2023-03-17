@@ -135,6 +135,12 @@ def parse_opt():
         help='relative classification weight of the no-object class'
     )
     parser.add_argument(
+        '--no-lrs', 
+        dest='no_lrs',
+        action='store_true',
+        help='pass this to not use learning rate scheduler'
+    )
+    parser.add_argument(
         '--seed',
         default=0,
         type=int ,
@@ -269,7 +275,8 @@ def main(args):
             DEVICE, 
             epoch=epoch
         )
-        lr_scheduler.step()
+        if not args.no_lrs:
+            lr_scheduler.step()
         stats, coco_evaluator = evaluate(
             model=model,
             criterion=criterion,
