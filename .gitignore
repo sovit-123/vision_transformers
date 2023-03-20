@@ -129,7 +129,6 @@ dmypy.json
 .pyre/
 
 # Data directories.
-data/
 examples/checkpoints
 examples/plots
 examples/results
