@@ -100,7 +100,7 @@ python tools/train_classifier.py --train-dir data/plant_disease_recognition/trai
 
 * In the above command:
   * `--train-dir` should be path to the training directory where the images will be inside their respective class folders.
-  * `valid-dir` should be path to the validation directory where the images will be inside their respective class folders.
+  * `--valid-dir` should be path to the validation directory where the images will be inside their respective class folders.
 
 ### All Available Model Flags for `--model`
 
@@ -115,7 +115,13 @@ swin_s_p4_w7_224
 swin_l_p4_w7_224
 ```
 
+### DETR Training
 
+* The datasets annotations should be in XML format. The dataset (according to `--data` flag) given in following can be found here => https://www.kaggle.com/datasets/sovitrath/aquarium-data
+
+```
+python tools/train_detector.py --model detr_resnet50 --epochs 2 --data data/aquarium.yaml
+```
 
 ## [Examples](https://github.com/sovit-123/vision_transformers/tree/main/examples)
 
