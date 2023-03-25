@@ -199,8 +199,8 @@ if __name__ == '__main__':
     train_loss, valid_loss = [], []
     train_acc, valid_acc = [], []
 
-    if torch.__version__ >= '2.0.0':
-        model = torch.compile(model)
+    # if torch.__version__ >= '2.0.0':
+    #     model = torch.compile(model)
 
     # Start the training.
     for epoch in range(epochs):
