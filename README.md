@@ -123,6 +123,28 @@ swin_l_p4_w7_224
 python tools/train_detector.py --model detr_resnet50 --epochs 2 --data data/aquarium.yaml
 ```
 
+### DETR Image Inference
+
+Replace weights and input file path as per your requirement.
+
+```
+python tools/inference_image_detect.py --weights runs/training/res_1/best_model.pth --input image_3.jpg
+```
+
+You can also provide the path to a directory to run inference on all images in that directory.
+
+```
+python tools/inference_image_detect.py --weights runs/training/res_1/best_model.pth --input image_directory
+```
+
+### DETR Video Inference
+
+Replace weights and input file path as per your requirement. You can add `--show` to the command to visualize the detection on screen.
+
+```
+python tools/inference_video_detect.py --weights runs/training/res_1/best_model.pth --input video_6.mp4
+```
+
 ## [Examples](https://github.com/sovit-123/vision_transformers/tree/main/examples)
 
 - [ViT Base 16 | 224x224 pretrained fine-tuning on CIFAR10](https://github.com/sovit-123/vision_transformers/blob/main/examples/cifar10_vit_pretrained.ipynb)
