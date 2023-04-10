@@ -5,6 +5,7 @@ import argparse
 import yaml
 import os
 import time
+import torchinfo
 
 from vision_transformers.detection.detr.model import DETRModel
 from utils.detection.utils.general import (
@@ -108,6 +109,18 @@ def main(args):
         video=True
     )
     _ = model.to(DEVICE).eval()
+    try:
+        torchinfo.summary(
+            model, device=DEVICE, input_size=(1, 3, 640, 640)
+        )
+    except:
+        print(model)
+        # Total parameters and trainable parameters.
+        total_params = sum(p.numel() for p in model.parameters())
+        print(f"{total_params:,} total parameters.")
+        total_trainable_params = sum(
+            p.numel() for p in model.parameters() if p.requires_grad)
+        print(f"{total_trainable_params:,} training parameters.")
 
     # Colors for visualization.
     COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))

@@ -239,7 +239,7 @@ def load_weights(
             CLASSES = data_configs['CLASSES']
         model = torch.hub.load(
             'facebookresearch/detr', 
-            'detr_resnet50', 
+            args.model, 
             pretrained=True
         )
     if args.weights is not None:
