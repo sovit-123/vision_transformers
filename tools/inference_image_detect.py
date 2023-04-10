@@ -107,7 +107,7 @@ def main(args):
     DEVICE = args.device
     OUT_DIR = set_infer_dir(args.name)
 
-    model, CLASSES = load_weights(
+    model, CLASSES, data_path = load_weights(
         args, DEVICE, DETRModel, data_configs, NUM_CLASSES, CLASSES
     )
     _ = model.to(DEVICE).eval()
@@ -115,6 +115,8 @@ def main(args):
     # Colors for visualization.
     COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
     DIR_TEST = args.input
+    if DIR_TEST == None:
+        DIR_TEST = data_path
     test_images = collect_all_images(DIR_TEST)
     print(f"Test instances: {len(test_images)}")
 

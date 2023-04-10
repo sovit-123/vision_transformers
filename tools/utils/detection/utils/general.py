@@ -219,13 +219,22 @@ def set_infer_dir(dir_name=None):
         os.makedirs(new_dir_name, exist_ok=True)
         return new_dir_name
 
-def load_weights(args, device, DETRModel, data_configs, NUM_CLASSES, CLASSES):
+def load_weights(
+    args, device, DETRModel, data_configs, NUM_CLASSES, CLASSES, video=False
+):
+    data_path = None
     if args.weights is None:
         # If the config file is still None, 
         # then load the default one for COCO.
         if data_configs is None:
-            with open(os.path.join('data', 'test_image_config.yaml')) as file:
-                data_configs = yaml.safe_load(file)
+            if video:
+                with open(os.path.join('data', 'test_video_config.yaml')) as file:
+                    data_configs = yaml.safe_load(file)
+                data_path = data_configs['video_path']
+            else:
+                with open(os.path.join('data', 'test_image_config.yaml')) as file:
+                    data_configs = yaml.safe_load(file)
+                data_path = data_configs['image_path']
             NUM_CLASSES = data_configs['NC']
             CLASSES = data_configs['CLASSES']
         model = torch.hub.load(
@@ -243,4 +252,4 @@ def load_weights(args, device, DETRModel, data_configs, NUM_CLASSES, CLASSES):
         model = DETRModel(num_classes=NUM_CLASSES, model=args.model)
         model.load_state_dict(ckpt['model_state_dict'])
 
-    return model, CLASSES
+    return model, CLASSES, data_path

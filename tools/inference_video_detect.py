@@ -98,14 +98,22 @@ def main(args):
     DEVICE = args.device
     OUT_DIR = set_infer_dir(args.name)
 
-    model, CLASSES = load_weights(
-        args, DEVICE, DETRModel, data_configs, NUM_CLASSES, CLASSES
+    model, CLASSES, data_path = load_weights(
+        args, 
+        DEVICE, 
+        DETRModel, 
+        data_configs, 
+        NUM_CLASSES, 
+        CLASSES, 
+        video=True
     )
     _ = model.to(DEVICE).eval()
 
     # Colors for visualization.
     COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
     VIDEO_PATH = args.input
+    if VIDEO_PATH == None:
+        VIDEO_PATH = data_path
 
     cap, frame_width, frame_height = read_return_video_data(VIDEO_PATH)
 
