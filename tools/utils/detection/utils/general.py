@@ -249,7 +249,7 @@ def load_weights(
             data_configs = True
             NUM_CLASSES = ckpt['config']['NC']
             CLASSES = ckpt['config']['CLASSES']
-        model = DETRModel(num_classes=NUM_CLASSES, model=args.model)
+        model = DETRModel(num_classes=NUM_CLASSES, model=ckpt['model_name'])
         model.load_state_dict(ckpt['model_state_dict'])
 
     return model, CLASSES, data_path
