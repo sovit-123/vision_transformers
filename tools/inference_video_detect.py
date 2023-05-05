@@ -43,10 +43,10 @@ def parse_opt():
         help='computation/training device, default is GPU if GPU present'
     )
     parser.add_argument(
-        '-ims', 
+        '--imgsz', 
         '--img-size', 
         default=640,
-        dest='img_size',
+        dest='imgsz',
         type=int,
         help='resize image to, by default use the original frame/image size'
     )
@@ -111,7 +111,10 @@ def main(args):
     _ = model.to(DEVICE).eval()
     try:
         torchinfo.summary(
-            model, device=DEVICE, input_size=(1, 3, 640, 640)
+            model, 
+            device=DEVICE, 
+            input_size=(1, 3, args.imgsz, args.imgsz), 
+            row_settings=["var_names"]
         )
     except:
         print(model)
@@ -135,8 +138,8 @@ def main(args):
     out = cv2.VideoWriter(f"{OUT_DIR}/{save_name}.mp4", 
                         cv2.VideoWriter_fourcc(*'mp4v'), 30, 
                         (frame_width, frame_height))
-    if args.img_size != None:
-        RESIZE_TO = args.img_size
+    if args.imgsz != None:
+        RESIZE_TO = args.imgsz
     else:
         RESIZE_TO = frame_width
 

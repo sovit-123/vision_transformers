@@ -44,10 +44,10 @@ def parse_opt():
         help='computation/training device, default is GPU if GPU present'
     )
     parser.add_argument(
-        '-ims', 
-        '--img-size', 
+        '--imgsz', 
+        '--img-size',
         default=640,
-        dest='img_size',
+        dest='imgsz',
         type=int,
         help='resize image to, by default use the original frame/image size'
     )
@@ -114,7 +114,10 @@ def main(args):
     _ = model.to(DEVICE).eval()
     try:
         torchinfo.summary(
-            model, device=DEVICE, input_size=(1, 3, 640, 640)
+            model, 
+            device=DEVICE, 
+            input_size=(1, 3, args.imgsz, args.imgsz),
+            row_settings=["var_names"]
         )
     except:
         print(model)
@@ -141,8 +144,8 @@ def main(args):
         image_name = test_images[image_num].split(os.path.sep)[-1].split('.')[0]
         orig_image = cv2.imread(test_images[image_num])
         frame_height, frame_width, _ = orig_image.shape
-        if args.img_size != None:
-            RESIZE_TO = args.img_size
+        if args.imgsz != None:
+            RESIZE_TO = args.imgsz
         else:
             RESIZE_TO = frame_width
         

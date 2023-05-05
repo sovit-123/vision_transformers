@@ -61,8 +61,9 @@ def parse_opt():
         help='training result dir name in runs/training/, (default res_#)'
     )
     parser.add_argument(
-        '-ims', '--img-size',
-        dest='img_size', 
+        '--imgsz', 
+        '--img-size',
+        dest='imgsz', 
         default=640, 
         type=int, 
         help='image size to feed to the network'
@@ -167,7 +168,7 @@ def main(args):
     EPOCHS = args.epochs
     DEVICE = args.device
     NUM_CLASSES = len(CLASSES)
-    IMAGE_SIZE = args.img_size
+    IMAGE_SIZE = args.imgsz
     BATCH_SIZE = args.batch
     IS_DISTRIBUTED = False
     NUM_WORKERS = args.workers
@@ -223,7 +224,10 @@ def main(args):
     model = model.to(DEVICE)
     try:
         torchinfo.summary(
-            model, device=DEVICE, input_size=(BATCH_SIZE, 3, IMAGE_SIZE, IMAGE_SIZE)
+            model, 
+            device=DEVICE, 
+            input_size=(BATCH_SIZE, 3, IMAGE_SIZE, IMAGE_SIZE),
+            row_settings=["var_names"]
         )
     except:
         print(model)

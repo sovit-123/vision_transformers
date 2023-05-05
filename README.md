@@ -16,6 +16,15 @@
   - Swin Transformer Small Patch 4 Window 7 | 224x224: Official Microsoft weights
   - Swin Transformer Base Patch 4 Window 7 | 224x224: Official Microsoft weights
   - Swin Transformer Large Patch 4 Window 7 | 224x224: No pretrained weights
+  - MobileViT S
+  - MobileViT XS
+  - MobileVit XXS
+- Object Detection
+  - DETR ResNet50
+  - DETR ResNet50 DC5
+  - DETR ResNet101
+  - DETR ResNet101 DC5
+
 
 ## Quick Setup
 
@@ -113,6 +122,9 @@ swin_b_p4_w7_224
 swin_t_p4_w7_224
 swin_s_p4_w7_224
 swin_l_p4_w7_224
+mobilevit_s
+mobilevit_xs
+mobilevit_xxs
 ```
 
 ### DETR Training
@@ -123,12 +135,12 @@ swin_l_p4_w7_224
 python tools/train_detector.py --model detr_resnet50 --epochs 2 --data data/aquarium.yaml
 ```
 
-### DETR Image Inference
+### DETR Image Inference (using trained weights)
 
 Replace weights and input file path as per your requirement.
 
 ```
-python tools/inference_image_detect.py --weights runs/training/res_1/best_model.pth --input image_3.jpg
+python tools/inference_image_detect.py --weights runs/training/res_1/best_model.pth --input image.jpg
 ```
 
 You can also provide the path to a directory to run inference on all images in that directory.
@@ -137,12 +149,23 @@ You can also provide the path to a directory to run inference on all images in t
 python tools/inference_image_detect.py --weights runs/training/res_1/best_model.pth --input image_directory
 ```
 
-### DETR Video Inference
+### DETR Video Inference (using trained weights)
 
 Replace weights and input file path as per your requirement. You can add `--show` to the command to visualize the detection on screen.
 
 ```
-python tools/inference_video_detect.py --weights runs/training/res_1/best_model.pth --input video_6.mp4
+python tools/inference_video_detect.py --weights runs/training/res_1/best_model.pth --input video.mp4
+```
+
+## DETR Video Inference Commands (COCO pretrained models)
+
+***All commands to be executed from the root project directory (`vision_transformers`)***
+
+```
+python tools/inference_video_detect.py --model detr_resnet50 --show --input example_test_data/video_1.mp4
+                                               detr_resnet50_dc5            <path/to/your/file>
+                                               detr_resnet101               
+                                               detr_resnet101_dc5
 ```
 
 ## [Examples](https://github.com/sovit-123/vision_transformers/tree/main/examples)
@@ -151,26 +174,3 @@ python tools/inference_video_detect.py --weights runs/training/res_1/best_model.
 - [ViT Tiny 16 | 224x224 pretrained fine-tuning on CIFAR10](https://github.com/sovit-123/vision_transformers/blob/main/examples/cifar10_vit_tiny_p16_224.ipynb)
 - [DETR image inference notebook](https://github.com/sovit-123/vision_transformers/blob/main/examples/detr_image_inference.ipynb)
 - [DETR video inference script](https://github.com/sovit-123/vision_transformers/blob/main/examples/detr_video_inference.py) (**Fine Tuning Coming Soon**) --- [Check commands here](#DETR-Video-Inference-Commands)
-
-## DETR Video Inference Commands
-
-***All commands to be executed from the root project directory (`vision_transformers`)***
-
-* Using default video:
-
-```
-python examples/detr_video_inference.py
-```
-
-* Using CPU only:
-
-```
-python examples/detr_video_inference.py --device cpu
-```
-
-* Using another video file:
-
-```
-python examples/detr_video_inference.py --input /path/to/video/file
-```
-
