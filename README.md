@@ -20,10 +20,17 @@
   - MobileViT XS
   - MobileVit XXS
 - Object Detection
-  - DETR ResNet50
-  - DETR ResNet50 DC5
-  - DETR ResNet101
-  - DETR ResNet101 DC5
+  - DETR ResNet50 (COCO pretrained)
+  - DETR ResNet50 DC5 (COCO pretrained)
+  - DETR ResNet101 (COCO pretrained)
+  - DETR ResNet101 DC5 (COCO pretrained)
+
+## GO TO
+
+* [Quick Setup](#Quick-Setup)
+* [Importing Models and Usage](#Importing-Models-and-Usage)
+* [DETR Video Inference Commands (COCO pretrained models)](#DETR-Video-Inference-Commands-(COCO-pretrained-models))
+* [Examples](#Examples)
 
 
 ## Quick Setup
