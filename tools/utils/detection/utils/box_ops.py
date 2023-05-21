@@ -4,6 +4,7 @@ Utilities for bounding box manipulation and GIoU.
 """
 import torch
 from torchvision.ops.boxes import box_area
+from torchvision.ops import nms
 
 
 def box_cxcywh_to_xyxy(x):
@@ -88,3 +89,16 @@ def masks_to_boxes(masks):
     y_min = y_mask.masked_fill(~(masks.bool()), 1e8).flatten(1).min(-1)[0]
 
     return torch.stack([x_min, y_min, x_max, y_max], 1)
+
+def box_nms(outputs):
+    boxes = outputs['pred_boxes'][0].detach().cpu().numpy()
+    probas   = outputs['pred_logits'].softmax(-1).detach().cpu()[0, :, :-1]
+    keep = probas.max(-1).values > 0.0
+    # boxes = boxes[keep]
+    # probas = probas[keep]
+    indices = nms(
+        torch.tensor(boxes), 
+        torch.tensor([max(proba) for proba in probas]),
+        iou_threshold=0.45
+    )
+    return indices

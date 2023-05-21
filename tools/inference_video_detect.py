@@ -14,6 +14,7 @@ from utils.detection.utils.general import (
 )
 from utils.detection.utils.transforms import infer_transforms, resize
 from utils.detection.utils.annotations import inference_annotations, annotate_fps
+from utils.detection.utils.box_ops import box_nms
 
 np.random.seed(2023)
 
@@ -162,10 +163,14 @@ def main(args):
             # Get the start time.
             start_time = time.time()
             with torch.no_grad():
-                outputs = model(image.to(args.device))
+                preds = model(image.to(args.device))
             forward_end_time = time.time()
-
             forward_pass_time = forward_end_time - start_time
+
+            nms_indices = box_nms(preds)
+            outputs = {}
+            outputs['pred_boxes'] = torch.tensor([[preds['pred_boxes'][0][i].cpu().numpy() for i in nms_indices]])
+            outputs['pred_logits'] = torch.tensor([[preds['pred_logits'][0][i].cpu().numpy() for i in nms_indices]])
             
             # Get the current fps.
             fps = 1 / (forward_pass_time)
