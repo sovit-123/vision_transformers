@@ -2,7 +2,7 @@
 import json
 import os
 
-import utils.detection.utils.misc as utils
+import utils.detection.detr.misc as utils
 
 try:
     from panopticapi.evaluation import pq_compute

@@ -10,9 +10,9 @@ from torch import nn
 from torchvision.models._utils import IntermediateLayerGetter
 from typing import Dict, List
 
-from utils.detection.utils.misc import NestedTensor, is_main_process
+from utils.detection.detr.misc import NestedTensor, is_main_process
 
-from utils.detection.utils.position_encoding import build_position_encoding
+from utils.detection.detr.position_encoding import build_position_encoding
 
 
 class FrozenBatchNorm2d(torch.nn.Module):

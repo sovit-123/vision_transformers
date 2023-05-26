@@ -6,16 +6,16 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from utils.detection.utils import box_ops
-from utils.detection.utils.misc import (NestedTensor, nested_tensor_from_tensor_list,
+from utils.detection.detr import box_ops
+from utils.detection.detr.misc import (NestedTensor, nested_tensor_from_tensor_list,
                        accuracy, get_world_size, interpolate,
                        is_dist_avail_and_initialized)
 
-from utils.detection.utils.backbone import build_backbone
-from utils.detection.utils.matcher import build_matcher
-from utils.detection.utils.segmentation import (DETRsegm, PostProcessPanoptic, PostProcessSegm,
+from utils.detection.detr.backbone import build_backbone
+from utils.detection.detr.matcher import build_matcher
+from utils.detection.detr.segmentation import (DETRsegm, PostProcessPanoptic, PostProcessSegm,
                            dice_loss, sigmoid_focal_loss)
-from utils.detection.utils.transformer import build_transformer
+from utils.detection.detr.transformer import build_transformer
 
 
 class DETR(nn.Module):

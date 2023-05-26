@@ -9,14 +9,14 @@ from utils.detection.datasets import (
     create_train_dataset, create_valid_dataset, 
     create_train_loader, create_valid_loader
 )
-from utils.detection.utils.engine import train, evaluate
+from utils.detection.detr.engine import train, evaluate
 from vision_transformers.detection.detr.model import DETRModel
-from utils.detection.utils.matcher import HungarianMatcher
-from utils.detection.utils.detr import SetCriterion, PostProcess
+from utils.detection.detr.matcher import HungarianMatcher
+from utils.detection.detr.detr import SetCriterion, PostProcess
 from torch.utils.data import (
     distributed, RandomSampler, SequentialSampler
 )
-from utils.detection.utils.general import (
+from utils.detection.detr.general import (
     SaveBestModel,
     init_seeds,
     set_training_dir,
@@ -24,7 +24,7 @@ from utils.detection.utils.general import (
     save_mAP,
     show_tranformed_image
 )
-from utils.detection.utils.logging import set_log, coco_log
+from utils.detection.detr.logging import set_log, coco_log
 
 RANK = int(os.getenv('RANK', -1))
 
