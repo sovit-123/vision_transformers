@@ -16,7 +16,7 @@ from pycocotools.cocoeval import COCOeval
 from pycocotools.coco import COCO
 import pycocotools.mask as mask_util
 
-from utils.detection.utils.misc import all_gather
+from utils.detection.detr.misc import all_gather
 
 
 class CocoEvaluator(object):

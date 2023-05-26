@@ -14,7 +14,7 @@ import yaml
 import os
 
 from vision_transformers.detection.detr.model import DETRModel
-from utils.detection.utils.general import load_weights
+from utils.detection.detr.general import load_weights
 
 def parse_opt():
     parser = argparse.ArgumentParser()

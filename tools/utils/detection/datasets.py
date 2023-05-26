@@ -8,7 +8,7 @@ import albumentations as A
 
 from xml.etree import ElementTree as et
 from torch.utils.data import Dataset, DataLoader
-from utils.detection.utils.transforms import (
+from utils.detection.detr.transforms import (
     get_train_transform, 
     get_valid_transform,
     get_train_aug,

@@ -1,6 +1,6 @@
 import cv2
 
-from utils.detection.utils.general import rescale_bboxes
+from utils.detection.detr.general import rescale_bboxes
 
 def inference_annotations(
     outputs, 

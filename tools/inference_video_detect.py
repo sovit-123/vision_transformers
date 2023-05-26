@@ -8,12 +8,12 @@ import time
 import torchinfo
 
 from vision_transformers.detection.detr.model import DETRModel
-from utils.detection.utils.general import (
+from utils.detection.detr.general import (
     set_infer_dir,
     load_weights
 )
-from utils.detection.utils.transforms import infer_transforms, resize
-from utils.detection.utils.annotations import inference_annotations, annotate_fps
+from utils.detection.detr.transforms import infer_transforms, resize
+from utils.detection.detr.annotations import inference_annotations, annotate_fps
 
 np.random.seed(2023)
 

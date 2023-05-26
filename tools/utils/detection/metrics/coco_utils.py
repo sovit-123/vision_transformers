@@ -2,7 +2,7 @@ import torch
 import torchvision
 
 from pycocotools.coco import COCO
-from utils.detection.utils.general import rescale_bboxes
+from utils.detection.detr.general import rescale_bboxes
 
 def convert_to_coco_api(ds):
     coco_ds = COCO()

@@ -15,9 +15,9 @@ import os
 import time
 import onnxruntime
 
-from utils.detection.utils.general import set_infer_dir
-from utils.detection.utils.transforms import infer_transforms, resize
-from utils.detection.utils.annotations import inference_annotations, annotate_fps
+from utils.detection.detr.general import set_infer_dir
+from utils.detection.detr.transforms import infer_transforms, resize
+from utils.detection.detr.annotations import inference_annotations, annotate_fps
 
 np.random.seed(2023)
 

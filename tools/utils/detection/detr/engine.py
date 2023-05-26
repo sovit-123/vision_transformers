@@ -1,5 +1,5 @@
 import torch
-import utils.detection.utils.misc as utils
+import utils.detection.detr.misc as utils
 import math
 import sys
 import os
