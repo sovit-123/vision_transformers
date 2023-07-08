@@ -83,8 +83,9 @@ def read_return_video_data(video_path):
     # Get the video's frame width and height.
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
+    fps = int(cap.get(5))
     assert (frame_width != 0 and frame_height !=0), 'Please check video path...'
-    return cap, frame_width, frame_height
+    return cap, frame_width, frame_height, fps
 
 def main(args):
     NUM_CLASSES = None
@@ -131,12 +132,12 @@ def main(args):
     if VIDEO_PATH == None:
         VIDEO_PATH = data_path
 
-    cap, frame_width, frame_height = read_return_video_data(VIDEO_PATH)
+    cap, frame_width, frame_height, fps = read_return_video_data(VIDEO_PATH)
 
     save_name = VIDEO_PATH.split(os.path.sep)[-1].split('.')[0]
     # Define codec and create VideoWriter object.
     out = cv2.VideoWriter(f"{OUT_DIR}/{save_name}.mp4", 
-                        cv2.VideoWriter_fourcc(*'mp4v'), 30, 
+                        cv2.VideoWriter_fourcc(*'mp4v'), fps, 
                         (frame_width, frame_height))
     if args.imgsz != None:
         RESIZE_TO = args.imgsz
