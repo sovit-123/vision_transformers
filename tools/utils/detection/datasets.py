@@ -27,7 +27,7 @@ class DETRDataset(Dataset):
         transforms=None, 
         use_train_aug=False,
         train=False, 
-        no_mosaic=False,
+        mosaic=0.0,
         square_training=False
     ):
         self.transforms = transforms
@@ -37,7 +37,7 @@ class DETRDataset(Dataset):
         self.img_size = img_size
         self.classes = classes
         self.train = train
-        self.no_mosaic = no_mosaic
+        self.mosaic = mosaic
         self.square_training = square_training
         self.mosaic_border = [-img_size // 2, -img_size // 2]
         self.image_file_types = ['*.jpg', '*.jpeg', '*.png', '*.ppm', '*.JPG']
@@ -281,18 +281,24 @@ class DETRDataset(Dataset):
 
     def __getitem__(self, idx):
         # Capture the image name and the full image path.
-        if self.no_mosaic:
+        if not self.train:
             image, image_resized, orig_boxes, boxes, \
                 labels, area, iscrowd, dims = self.load_image_and_labels(
                 index=idx
             )
 
-        if self.train and not self.no_mosaic:
-            #while True:
-            image_resized, boxes, labels, \
-                area, iscrowd, dims = self.load_cutmix_image_and_boxes(
-                idx, resize_factor=(self.img_size, self.img_size)
-            )
+        if self.train:
+            mosaic_prob = random.uniform(0.0, 1.0)
+            if self.mosaic >= mosaic_prob:
+                image_resized, boxes, labels, \
+                    area, iscrowd, dims = self.load_cutmix_image_and_boxes(
+                    idx, resize_factor=(self.img_size, self.img_size)
+                )
+            else:
+                image, image_resized, orig_boxes, boxes, \
+                    labels, area, iscrowd, dims = self.load_image_and_labels(
+                    index=idx
+                )
 
         # Prepare the final `target` dictionary.
         target = {}
@@ -351,7 +357,7 @@ def create_train_dataset(
     img_size, 
     classes,
     use_train_aug=False,
-    no_mosaic=False,
+    mosaic=0.0,
     square_training=False
 ):
     train_dataset = DETRDataset(
@@ -362,7 +368,7 @@ def create_train_dataset(
         get_train_transform(),
         use_train_aug=use_train_aug,
         train=True, 
-        no_mosaic=no_mosaic,
+        mosaic=mosaic,
         square_training=square_training
     )
     return train_dataset
@@ -380,7 +386,6 @@ def create_valid_dataset(
         classes, 
         get_valid_transform(),
         train=False, 
-        no_mosaic=True,
         square_training=square_training
     )
     return valid_dataset

@@ -98,10 +98,10 @@ def parse_opt():
             with mosaic'
     )
     parser.add_argument(
-        '-nm', '--no-mosaic', 
-        dest='no_mosaic', 
-        action='store_true',
-        help='pass this to not to use mosaic augmentation'
+        '--mosaic', 
+        default=0.0,
+        type=float,
+        help='probability of applying mosaic, (default, never apply)'
     )
     parser.add_argument(
         '-vt', '--vis-transformed', 
@@ -182,7 +182,7 @@ def main(args):
         IMAGE_SIZE, 
         CLASSES,
         use_train_aug=args.use_train_aug,
-        no_mosaic=True,
+        mosaic=args.mosaic,
         square_training=True
     )
 
