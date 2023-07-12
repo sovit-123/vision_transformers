@@ -227,7 +227,8 @@ def main(args):
             model, 
             device=DEVICE, 
             input_size=(BATCH_SIZE, 3, IMAGE_SIZE, IMAGE_SIZE),
-            row_settings=["var_names"]
+            row_settings=["var_names"],
+            col_names=["input_size", "output_size", "num_params"],
         )
     except:
         print(model)
