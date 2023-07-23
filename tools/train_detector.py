@@ -142,6 +142,11 @@ def parse_opt():
         help='pass this to not use learning rate scheduler'
     )
     parser.add_argument(
+        '--weights',
+        default=None,
+        help='path to weights if resuming training'
+    )
+    parser.add_argument(
         '--seed',
         default=0,
         type=int ,
@@ -221,6 +226,10 @@ def main(args):
     weight_dict = {'loss_ce': 1, 'loss_bbox': 5, 'loss_giou': 2}
     losses = ['labels', 'boxes', 'cardinality']
     model = DETRModel(num_classes=NUM_CLASSES, model=args.model)
+    if args.weights is not None:
+        print(f"Loading weights from {args.weights}...")
+        ckpt = torch.load(args.weights)
+        model.load_state_dict(ckpt['model_state_dict'])
     model = model.to(DEVICE)
     try:
         torchinfo.summary(
