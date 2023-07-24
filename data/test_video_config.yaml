@@ -1,7 +1,7 @@
 video_path: example_test_data/video_1.mp4
 NC: 91
 CLASSES: [
-    '__background__', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
+    '__background__', 'N/A', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
     'train', 'truck', 'boat', 'traffic light', 'fire hydrant', 'N/A', 'stop sign',
     'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
     'elephant', 'bear', 'zebra', 'giraffe', 'N/A', 'backpack', 'umbrella', 'N/A', 'N/A',

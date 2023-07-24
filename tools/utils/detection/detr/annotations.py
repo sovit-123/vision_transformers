@@ -27,7 +27,7 @@ def inference_annotations(
     for j, box in enumerate(boxes):
         p1 = (int(box[0]), int(box[1]))
         p2 = (int(box[2]), int(box[3]))
-        label = int(probas[j].argmax())
+        label = int(probas[j].argmax()) + 1
         class_name = classes[label]
         color = colors[classes.index(class_name)]
         cv2.rectangle(

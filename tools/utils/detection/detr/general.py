@@ -128,7 +128,7 @@ def show_tranformed_image(train_loader, device, classes, colors):
             boxes = targets[i]['boxes'].cpu().numpy().astype(np.float32)
             labels = targets[i]['labels'].cpu().numpy().astype(np.int32)
             # Get all the predicited class names.
-            pred_classes = [classes[i] for i in targets[i]['labels'].cpu().numpy()]
+            pred_classes = [classes[i] for i in targets[i]['labels'].cpu().numpy() + 1]
             sample = images[i].permute(1, 2, 0).cpu().numpy()
             sample = denormalize(sample, IMG_MEAN, IMG_STD)
             sample = cv2.cvtColor(sample, cv2.COLOR_RGB2BGR)
