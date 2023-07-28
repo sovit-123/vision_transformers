@@ -1,0 +1,17 @@
+# Images and labels direcotry should be relative to train.py
+TRAIN_DIR_IMAGES: '../../object_detection/input/person_detection/Train/Train/JPEGImages'
+TRAIN_DIR_LABELS: '../../object_detection/input/person_detection/Train/Train/JPEGImages'
+VALID_DIR_IMAGES: '../../object_detection/input/person_detection/Val/Val/JPEGImages'
+VALID_DIR_LABELS: '../../object_detection/input/person_detection/Val/Val/JPEGImages'
+
+# Class names.
+CLASSES: [
+    '__background__',
+    'person'
+]
+
+# Number of classes (object classes + 1 for background).
+NC: 2
+
+# Whether to save the predictions of the validation set while training.
+SAVE_VALID_PREDICTION_IMAGES: True

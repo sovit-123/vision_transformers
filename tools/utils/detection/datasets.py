@@ -103,7 +103,7 @@ class DETRDataset(Dataset):
             for member in root.findall('object'):
                 # Map the current object name to `classes` list to get
                 # the label index and append to `labels` list.
-                labels.append(self.classes.index(member.find('name').text))
+                labels.append(self.classes.index(member.find('name').text) - 1)
                 
                 # xmin = left corner x-coordinates
                 xmin = int(float(member.find('bndbox').find('xmin').text))
