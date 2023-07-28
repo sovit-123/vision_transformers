@@ -292,8 +292,8 @@ def main(args):
             DEVICE, 
             epoch=epoch
         )
-        if not args.no_lrs:
-            lr_scheduler.step()
+        # if not args.no_lrs:
+        #     lr_scheduler.step()
         stats, coco_evaluator = evaluate(
             model=model,
             criterion=criterion,
