@@ -4,3 +4,4 @@ tqdm
 
 # Extras-----------------------------------
 pycocotools>=2.0.2
+torchmetrics # Evaluation
