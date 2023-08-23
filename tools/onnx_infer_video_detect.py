@@ -17,7 +17,14 @@ import onnxruntime
 
 from utils.detection.detr.general import set_infer_dir
 from utils.detection.detr.transforms import infer_transforms, resize
-from utils.detection.detr.annotations import inference_annotations, annotate_fps
+from utils.detection.detr.annotations import (
+    convert_detections,
+    inference_annotations, 
+    annotate_fps,
+    convert_pre_track,
+    convert_post_track
+)
+from deep_sort_realtime.deepsort_tracker import DeepSort
 
 np.random.seed(2023)
 
@@ -82,6 +89,17 @@ def parse_opt():
         action='store_true',
         help='visualize output only if this argument is passed'
     )
+    parser.add_argument(
+        '--track',
+        action='store_true'
+    )
+    parser.add_argument(
+        '--classes',
+        nargs='+',
+        type=int,
+        default=None,
+        help='filter classes by visualization, --classes 1 2 3'
+    )
     args = parser.parse_args()
     return args
 
@@ -95,6 +113,8 @@ def read_return_video_data(video_path):
     return cap, frame_width, frame_height, fps
 
 def main(args):
+    if args.track: # Initialize Deep SORT tracker if tracker is selected.
+        tracker = DeepSort(max_age=30)
     CLASSES = None
     data_configs = None
     if args.data is not None:
@@ -163,9 +183,26 @@ def main(args):
             outputs['pred_boxes'] = torch.tensor(preds[1])
             outputs['pred_logits'] = torch.tensor(preds[0])
             if len(outputs['pred_boxes'][0]) != 0:
-                orig_frame = inference_annotations(
-                    outputs,
+                draw_boxes, pred_classes, scores = convert_detections(
+                    outputs, 
                     args.threshold,
+                    CLASSES,
+                    orig_frame,
+                    args 
+                )
+                if args.track:
+                    tracker_inputs = convert_pre_track(
+                        draw_boxes, pred_classes, scores
+                    )
+                    # Update tracker with detections.
+                    tracks = tracker.update_tracks(
+                        tracker_inputs, frame=orig_frame
+                    )
+                    draw_boxes, pred_classes, scores = convert_post_track(tracks)
+                orig_frame = inference_annotations(
+                    draw_boxes,
+                    pred_classes,
+                    scores,
                     CLASSES,
                     COLORS,
                     orig_frame,
