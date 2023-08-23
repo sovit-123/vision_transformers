@@ -20,8 +20,11 @@ from utils.detection.detr.transforms import infer_transforms, resize
 from utils.detection.detr.annotations import (
     convert_detections,
     inference_annotations, 
-    annotate_fps
+    annotate_fps,
+    convert_pre_track,
+    convert_post_track
 )
+from deep_sort_realtime.deepsort_tracker import DeepSort
 
 np.random.seed(2023)
 
@@ -110,6 +113,8 @@ def read_return_video_data(video_path):
     return cap, frame_width, frame_height, fps
 
 def main(args):
+    if args.track: # Initialize Deep SORT tracker if tracker is selected.
+        tracker = DeepSort(max_age=30)
     CLASSES = None
     data_configs = None
     if args.data is not None:
@@ -185,6 +190,15 @@ def main(args):
                     orig_frame,
                     args 
                 )
+                if args.track:
+                    tracker_inputs = convert_pre_track(
+                        draw_boxes, pred_classes, scores
+                    )
+                    # Update tracker with detections.
+                    tracks = tracker.update_tracks(
+                        tracker_inputs, frame=orig_frame
+                    )
+                    draw_boxes, pred_classes, scores = convert_post_track(tracks)
                 orig_frame = inference_annotations(
                     draw_boxes,
                     pred_classes,

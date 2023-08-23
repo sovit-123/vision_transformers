@@ -1,3 +1,18 @@
+"""
+USAGE:
+
+python tools/inference_video_detect.py --model detr_resnet50 --show --input example_test_data/video_1.mp4
+
+# Tracking.
+python tools/inference_video_detect.py --model detr_resnet50 --show --input example_test_data/video_1.mp4 --track
+
+# Selecting classes (person).
+python tools/inference_video_detect.py --model detr_resnet50 --show --input example_test_data/video_1.mp4 --classes 2
+
+# Selecting classes (person and bicycle).
+python tools/inference_video_detect.py --model detr_resnet50 --show --input example_test_data/video_1.mp4 --classes 2 3
+"""
+
 import torch
 import cv2
 import numpy as np
@@ -16,8 +31,11 @@ from utils.detection.detr.transforms import infer_transforms, resize
 from utils.detection.detr.annotations import (
     convert_detections,
     inference_annotations, 
-    annotate_fps
+    annotate_fps,
+    convert_pre_track,
+    convert_post_track
 )
+from deep_sort_realtime.deepsort_tracker import DeepSort
 
 np.random.seed(2023)
 
@@ -103,6 +121,9 @@ def read_return_video_data(video_path):
     return cap, frame_width, frame_height, fps
 
 def main(args):
+    if args.track: # Initialize Deep SORT tracker if tracker is selected.
+        tracker = DeepSort(max_age=30)
+
     NUM_CLASSES = None
     CLASSES = None
     data_configs = None
@@ -198,6 +219,15 @@ def main(args):
                     orig_frame,
                     args 
                 )
+                if args.track:
+                    tracker_inputs = convert_pre_track(
+                        draw_boxes, pred_classes, scores
+                    )
+                    # Update tracker with detections.
+                    tracks = tracker.update_tracks(
+                        tracker_inputs, frame=frame
+                    )
+                    draw_boxes, pred_classes, scores = convert_post_track(tracks) 
                 orig_frame = inference_annotations(
                     draw_boxes,
                     pred_classes,

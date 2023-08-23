@@ -33,6 +33,38 @@ def convert_detections(
 
     return draw_boxes, pred_classes, scores
 
+def convert_pre_track(
+    draw_boxes, pred_classes, scores
+):
+    final_preds = []
+    for i, box in enumerate(draw_boxes):
+        # Append ([x, y, w, h], score, label_string). For deep sort real-time.
+        final_preds.append(
+            (
+                [box[0], box[1], box[2] - box[0], box[3] - box[1]],
+                scores[i],
+                str(pred_classes[i])
+            )
+        )
+    return final_preds
+
+def convert_post_track(
+    tracks
+):
+    draw_boxes, pred_classes, scores, track_id = [], [], [], []
+    for track in tracks:
+        if not track.is_confirmed():
+            continue
+        score = track.det_conf
+        if score is None:
+            continue
+        track_id = track.track_id
+        pred_class = track.det_class
+        pred_classes.append(f"{track_id} {pred_class}")
+        scores.append(score)
+        draw_boxes.append(track.to_ltrb())
+    return draw_boxes, pred_classes, scores
+
 def inference_annotations(
     draw_boxes,
     pred_classes,
