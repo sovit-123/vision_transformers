@@ -14,7 +14,10 @@ from utils.detection.detr.general import (
     load_weights
 )
 from utils.detection.detr.transforms import infer_transforms, resize
-from utils.detection.detr.annotations import inference_annotations
+from utils.detection.detr.annotations import (
+    convert_detections,
+    inference_annotations, 
+)
 
 np.random.seed(2023)
 
@@ -75,6 +78,17 @@ def parse_opt():
         dest='show', 
         action='store_true',
         help='visualize output only if this argument is passed'
+    )
+    parser.add_argument(
+        '--track',
+        action='store_true'
+    )
+    parser.add_argument(
+        '--classes',
+        nargs='+',
+        type=int,
+        default=None,
+        help='filter classes by visualization, --classes 1 2 3'
     )
     args = parser.parse_args()
     return args
@@ -170,9 +184,17 @@ def main(args):
         frame_count += 1
 
         if len(outputs['pred_boxes'][0]) != 0:
-            orig_image = inference_annotations(
-                outputs,
+            draw_boxes, pred_classes, scores = convert_detections(
+                outputs, 
                 args.threshold,
+                CLASSES,
+                orig_image,
+                args 
+            )
+            orig_image = inference_annotations(
+                draw_boxes,
+                pred_classes,
+                scores,
                 CLASSES,
                 COLORS,
                 orig_image,
