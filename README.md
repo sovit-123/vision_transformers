@@ -37,7 +37,7 @@
 
 ### Stable PyPi Package
 
-```
+```bash
 pip install vision-transformers
 ```
 
@@ -45,14 +45,14 @@ pip install vision-transformers
 
 ### Latest Git Updates
 
-```
+```bash
 git clone https://github.com/sovit-123/vision_transformers.git
 cd vision_transformers
 ```
 
 Installation in the environment of your choice:
 
-```
+```bash
 pip install .
 ```
 
@@ -83,14 +83,14 @@ model = swin_transformer.swin_t_p4_w7_224(num_classes=1000, pretrained=True)
 
 * Clone the repository:
 
-```
+```bash
 git clone https://github.com/sovit-123/vision_transformers.git
 cd vision_transformers
 ```
 
 * Install
 
-```
+```bash
 pip install .
 ```
 
@@ -98,7 +98,7 @@ From the `vision_transformers` directory:
 
 * If you have no validation split
 
-```
+```bash
 python tools/train_classifier.py --data data/diabetic_retinopathy/colored_images/ 0.15 --epochs 5 --model vit_ti_p16_224
 ```
 
@@ -110,7 +110,7 @@ python tools/train_classifier.py --data data/diabetic_retinopathy/colored_images
 
 * If you have validation split
 
-```
+```bash
 python tools/train_classifier.py --train-dir data/plant_disease_recognition/train/ --valid-dir data/plant_disease_recognition/valid/ --epochs 5 --model vit_ti_p16_224
 ```
 
@@ -138,7 +138,7 @@ mobilevit_xxs
 
 * The datasets annotations should be in XML format. The dataset (according to `--data` flag) given in following can be found here => https://www.kaggle.com/datasets/sovitrath/aquarium-data
 
-```
+```bash
 python tools/train_detector.py --model detr_resnet50 --epochs 2 --data data/aquarium.yaml
 ```
 
@@ -146,13 +146,13 @@ python tools/train_detector.py --model detr_resnet50 --epochs 2 --data data/aqua
 
 Replace weights and input file path as per your requirement.
 
-```
+```bash
 python tools/inference_image_detect.py --weights runs/training/res_1/best_model.pth --input image.jpg
 ```
 
 You can also provide the path to a directory to run inference on all images in that directory.
 
-```
+```bash
 python tools/inference_image_detect.py --weights runs/training/res_1/best_model.pth --input image_directory
 ```
 
@@ -160,7 +160,7 @@ python tools/inference_image_detect.py --weights runs/training/res_1/best_model.
 
 Replace weights and input file path as per your requirement. You can add `--show` to the command to visualize the detection on screen.
 
-```
+```bash
 python tools/inference_video_detect.py --weights runs/training/res_1/best_model.pth --input video.mp4
 ```
 
@@ -168,11 +168,35 @@ python tools/inference_video_detect.py --weights runs/training/res_1/best_model.
 
 ***All commands to be executed from the root project directory (`vision_transformers`)***
 
-```
+```bash
 python tools/inference_video_detect.py --model detr_resnet50 --show --input example_test_data/video_1.mp4
                                                detr_resnet50_dc5            <path/to/your/file>
                                                detr_resnet101               
                                                detr_resnet101_dc5
+```
+
+### Tracking using COCO Pretrained Weights
+
+```bash
+# Track all COCO classes.
+python tools/inference_video_detect.py --track --model detr_resnet50 --show --input example_test_data/video_1.mp4
+                                                       detr_resnet50_dc5            <path/to/your/file>
+                                                       detr_resnet101               
+                                                       detr_resnet101_dc5
+
+# Track only person class (for DETR, object indices start from 2 for COCO pretrained models). Check `data/test_video_config.yaml` for more information.
+python tools/inference_video_detect.py --track --model detr_resnet50 --show --input ../inference_data/video_4.mp4 --classes 2
+
+# Track person and motocycle classes (for DETR, object indices start from 2 for COCO pretrained models). Check `data/test_video_config.yaml` for more information.
+python tools/inference_video_detect.py --track --model detr_resnet50 --show --input ../inference_data/video_4.mp4 --classes 2 5
+```
+
+### Tracking using Custom Trained Weights
+
+Just provide the path to the trained weights instead of a model.
+
+```bash
+python tools/inference_video_detect.py --track --weights runs/training/res_1/best_model.pth --show --input ../inference_data/video_4.mp4
 ```
 
 ## [Examples](https://github.com/sovit-123/vision_transformers/tree/main/examples)
