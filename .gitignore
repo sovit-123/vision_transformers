@@ -132,6 +132,7 @@ dmypy.json
 examples/checkpoints
 examples/plots
 examples/results
+examples/data
 # Training pipeline result directory.
 runs/
 

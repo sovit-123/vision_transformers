@@ -127,11 +127,14 @@ def vit_b_p16_224(
         print(f"Loading {name} pretrained weights")
         model = load_weights.load_pretrained_state_dict(model, name)
     
-    model.mlp_head = nn.Linear(
-        in_features=model.mlp_head.in_features, 
-        out_features=num_classes, 
-        bias=True
-    )
+    # Initialize new head only of classes != 1000.
+    if num_classes != 1000:
+        print('Initializing new head')
+        model.mlp_head = nn.Linear(
+            in_features=model.mlp_head.in_features, 
+            out_features=num_classes, 
+            bias=True
+        )
     return model
 
 def vit_b_p32_224(
@@ -162,11 +165,14 @@ def vit_b_p32_224(
         print(f"Loading {name} pretrained weights")
         model = load_weights.load_pretrained_state_dict(model, name)
 
-    model.mlp_head = nn.Linear(
-        in_features=model.mlp_head.in_features, 
-        out_features=num_classes, 
-        bias=True
-    )
+    # Initialize new head only of classes != 1000.
+    if num_classes != 1000:
+        print('Initializing new head')
+        model.mlp_head = nn.Linear(
+            in_features=model.mlp_head.in_features, 
+            out_features=num_classes, 
+            bias=True
+        )
     return model
 
 def vit_ti_p16_224(
@@ -192,11 +198,15 @@ def vit_ti_p16_224(
     if pretrained:
         print(f"Loading {name} pretrained weights")
         model = load_weights.load_pretrained_state_dict(model, name)
-    model.mlp_head = nn.Linear(
-        in_features=model.mlp_head.in_features, 
-        out_features=num_classes, 
-        bias=True
-    )
+
+    # Initialize new head only of classes != 1000.
+    if num_classes != 1000:
+        print('Initializing new head')
+        model.mlp_head = nn.Linear(
+            in_features=model.mlp_head.in_features, 
+            out_features=num_classes, 
+            bias=True
+        )
     return model
 
 def vit_ti_p16_384(
@@ -224,9 +234,12 @@ def vit_ti_p16_384(
         print(f"Loading {name} pretrained weights")
         model = load_weights.load_pretrained_state_dict(model, name)
 
-    model.mlp_head = nn.Linear(
-        in_features=model.mlp_head.in_features, 
-        out_features=num_classes, 
-        bias=True
-    )
+    # Initialize new head only of classes != 1000.
+    if num_classes != 1000:
+        print('Initializing new head')
+        model.mlp_head = nn.Linear(
+            in_features=model.mlp_head.in_features, 
+            out_features=num_classes, 
+            bias=True
+        )
     return model
