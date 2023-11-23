@@ -723,10 +723,13 @@ def mobilevit_s(num_classes=1000, pretrained=False):
         )
         model.load_state_dict(ckpt)
 
-    in_features = model.classifier.fc.in_features
-    model.classifier.fc = nn.Linear(
-        in_features=in_features, out_features=num_classes, bias=True
-    )
+    # Initialize new head only of classes != 1000.
+    if num_classes != 1000:
+        print('Initializing new head')
+        in_features = model.classifier.fc.in_features
+        model.classifier.fc = nn.Linear(
+            in_features=in_features, out_features=num_classes, bias=True
+        )
     return model
 
 def mobilevit_xs(num_classes=1000, pretrained=False):
@@ -738,10 +741,14 @@ def mobilevit_xs(num_classes=1000, pretrained=False):
             'https://docs-assets.developer.apple.com/ml-research/models/cvnets/classification/mobilevit_xs.pt'
         )
         model.load_state_dict(ckpt)
-    in_features = model.classifier.fc.in_features
-    model.classifier.fc = nn.Linear(
-        in_features=in_features, out_features=num_classes, bias=True
-    )
+
+    # Initialize new head only of classes != 1000.
+    if num_classes != 1000:
+        print('Initializing new head')
+        in_features = model.classifier.fc.in_features
+        model.classifier.fc = nn.Linear(
+            in_features=in_features, out_features=num_classes, bias=True
+        )
     return model
 
 def mobilevit_mini(num_classes=1000, pretrained=False):
@@ -753,10 +760,14 @@ def mobilevit_mini(num_classes=1000, pretrained=False):
             'https://github.com/kennethzhao24/mobilevit_pytorch/blob/main/weights/mobilevit_mini.pt'
         )
         model.load_state_dict(ckpt)
-    in_features = model.classifier.fc.in_features
-    model.classifier.fc = nn.Linear(
-        in_features=in_features, out_features=num_classes, bias=True
-    )
+
+    # Initialize new head only of classes != 1000.
+    if num_classes != 1000:
+        print('Initializing new head')
+        in_features = model.classifier.fc.in_features
+        model.classifier.fc = nn.Linear(
+            in_features=in_features, out_features=num_classes, bias=True
+        )
     return model
 
 def mobilevit_xxs(num_classes=1000, pretrained=False):
@@ -768,8 +779,12 @@ def mobilevit_xxs(num_classes=1000, pretrained=False):
             'https://docs-assets.developer.apple.com/ml-research/models/cvnets/classification/mobilevit_xxs.pt'
         )
         model.load_state_dict(ckpt)
-    in_features = model.classifier.fc.in_features
-    model.classifier.fc = nn.Linear(
-        in_features=in_features, out_features=num_classes, bias=True
-    )
+
+    # Initialize new head only of classes != 1000.
+    if num_classes != 1000:
+        print('Initializing new head')
+        in_features = model.classifier.fc.in_features
+        model.classifier.fc = nn.Linear(
+            in_features=in_features, out_features=num_classes, bias=True
+        )
     return model
