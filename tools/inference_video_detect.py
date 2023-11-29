@@ -36,6 +36,7 @@ from utils.detection.detr.annotations import (
     convert_post_track
 )
 from deep_sort_realtime.deepsort_tracker import DeepSort
+from utils.detection.detr.viz_attention import visualize_attention
 
 np.random.seed(2023)
 
@@ -107,6 +108,12 @@ def parse_opt():
         type=int,
         default=None,
         help='filter classes by visualization, --classes 1 2 3'
+    )
+    parser.add_argument(
+        '--viz-atten',
+        dest='vis_atten',
+        action='store_true',
+        help='visualize attention map of detected boxes'
     )
     args = parser.parse_args()
     return args
@@ -210,6 +217,16 @@ def main(args):
             total_fps += fps
             # Increment frame count.
             frame_count += 1
+
+            if args.vis_atten:
+                visualize_attention(
+                    model,
+                    image, 
+                    args.threshold, 
+                    orig_frame,
+                    f"{OUT_DIR}/frame_{str(frame_count)}.png",
+                    DEVICE
+                )
 
             if len(outputs['pred_boxes'][0]) != 0:
                 draw_boxes, pred_classes, scores = convert_detections(

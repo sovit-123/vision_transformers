@@ -192,11 +192,12 @@ def main(args):
 
         if args.vis_atten:
             visualize_attention(
-                model.cpu(),
-                input_tensor.cpu(), 
+                model,
+                input_tensor, 
                 args.threshold, 
                 orig_image,
-                OUT_DIR
+                f"{OUT_DIR}/{image_name}.png",
+                DEVICE
             )
 
         if len(outputs['pred_boxes'][0]) != 0:

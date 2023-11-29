@@ -10,7 +10,8 @@ def visualize_attention(
     inputs, 
     detection_threshold, 
     orig_image,
-    out_dir
+    out_dir,
+    device
 ):
     # use lists to store the outputs via up-values
     conv_features, enc_attn_weights, dec_attn_weights = [], [], []
@@ -28,7 +29,7 @@ def visualize_attention(
     ]
 
     # propagate through the model
-    outputs = model(inputs)
+    outputs = model(inputs.to(device))
 
     for hook in hooks:
         hook.remove()
@@ -66,4 +67,4 @@ def visualize_attention(
     # cv2.imwrite(
     #     os.path.join(out_dir, 'attention_map.png'), final_image
     # )
-    plt.savefig(os.path.join(out_dir, 'attention_map.png'))
+    plt.savefig(out_dir)
