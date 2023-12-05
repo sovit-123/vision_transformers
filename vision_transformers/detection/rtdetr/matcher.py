@@ -13,7 +13,7 @@ from torch import nn
 
 from .box_ops import box_cxcywh_to_xyxy, generalized_box_iou
 
-from src.core import register
+from .src.core import register
 
 
 @register
