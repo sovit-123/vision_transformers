@@ -8,8 +8,10 @@ import torch.nn.functional as F
 import random 
 import numpy as np 
 
-from .src.core import register
-
+from src.core import register
+from .hybrid_encoder import HybridEncoder
+from .rtdetr_decoder import RTDETRTransformer
+from src.nn.backbone.presnet import PResNet
 
 __all__ = ['RTDETR', ]
 
@@ -20,9 +22,9 @@ class RTDETR(nn.Module):
 
     def __init__(self, backbone: nn.Module, encoder, decoder, multi_scale=None):
         super().__init__()
-        self.backbone = backbone
-        self.decoder = decoder
-        self.encoder = encoder
+        self.backbone = PResNet()
+        self.decoder = RTDETRTransformer
+        self.encoder = HybridEncoder
         self.multi_scale = multi_scale
         
     def forward(self, x, targets=None):

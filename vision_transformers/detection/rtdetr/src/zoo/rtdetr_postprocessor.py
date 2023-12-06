@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 import torchvision
 
-from .src.core import register
+from src.core import register
 
 
 __all__ = ['RTDETRPostProcessor']

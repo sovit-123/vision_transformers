@@ -15,7 +15,7 @@ from .utils import deformable_attention_core_func, get_activation, inverse_sigmo
 from .utils import bias_init_with_prob
 
 
-from .src.core import register
+from src.core import register
 
 
 __all__ = ['RTDETRTransformer']
