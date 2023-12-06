@@ -1,11 +1,9 @@
 """by lyuwenyu
 """
 
-import torch 
 import torch.nn as nn 
 import torch.nn.functional as F 
 
-import random 
 import numpy as np 
 
 from ..core import register
@@ -22,9 +20,49 @@ class RTDETR(nn.Module):
 
     def __init__(self, backbone: nn.Module, encoder, decoder, multi_scale=None):
         super().__init__()
-        self.backbone = PResNet()
-        self.decoder = RTDETRTransformer
-        self.encoder = HybridEncoder
+        self.backbone = PResNet(
+            depth=50,
+            variant='d', 
+            num_stages=4, 
+            return_idx=[1, 2, 3], 
+            act='relu',
+            freeze_at=-1, 
+            freeze_norm=True, 
+            pretrained=True
+        )
+        self.decoder = RTDETRTransformer(
+            feat_channels=[256, 256, 256],
+            feat_strides=[8, 16, 32],
+            hidden_dim=256,
+            num_levels=3,
+
+            num_queries=300,
+
+            num_decoder_layers=6,
+            num_denoising=100,
+            
+            eval_idx=-1,
+            eval_spatial_size=[640, 640]
+        )
+        self.encoder = HybridEncoder(
+            in_channels=[512, 1024, 2048],
+            feat_strides=[8, 16, 32],
+            # intra
+            hidden_dim=256,
+            use_encoder_idx=[2],
+            num_encoder_layers=1,
+            nhead=8,
+            dim_feedforward=1024,
+            dropout=0.,
+            enc_act='gelu',
+            pe_temperature=10000,
+            # cross
+            expansion=1.0,
+            depth_mult=1,
+            act='silu',
+            # eval
+            eval_spatial_size=[640, 640]
+        )
         self.multi_scale = multi_scale
         
     def forward(self, x, targets=None):
