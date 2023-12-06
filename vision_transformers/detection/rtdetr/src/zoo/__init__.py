@@ -10,5 +10,3 @@ from .rtdetr_postprocessor import *
 from .rtdetr_criterion import *
 
 from .matcher import *
-
-from .. import src

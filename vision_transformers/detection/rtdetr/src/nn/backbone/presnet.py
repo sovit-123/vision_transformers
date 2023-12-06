@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 from .common import get_activation, ConvNormLayer, FrozenBatchNorm2d
 
-from src.core import register
+from ...core import register
 
 
 __all__ = ['PResNet']

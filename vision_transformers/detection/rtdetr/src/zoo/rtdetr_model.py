@@ -8,10 +8,10 @@ import torch.nn.functional as F
 import random 
 import numpy as np 
 
-from src.core import register
+from ..core import register
 from .hybrid_encoder import HybridEncoder
 from .rtdetr_decoder import RTDETRTransformer
-from src.nn.backbone.presnet import PResNet
+from ..nn.backbone.presnet import PResNet
 
 __all__ = ['RTDETR', ]
 
