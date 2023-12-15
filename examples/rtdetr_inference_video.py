@@ -1,4 +1,4 @@
-from vision_transformers.detection.rtdetr.src.zoo.rtdetr_model import RTDETR
+from vision_transformers.detection.rtdetr.src.zoo.rtdetr_model import load_model
 from torchvision import transforms
 
 import cv2
@@ -97,7 +97,7 @@ mscoco_label2category = {v: k for k, v in mscoco_category2label.items()}
 COLORS = np.random.uniform(0, 255, size=(len(mscoco_category2name), 3))
 
 # Load model.
-model = RTDETR(None, None, None)
+model = load_model('rtdetr_resnet101')
 
 print(model)
 
@@ -108,9 +108,6 @@ total_trainable_params = sum(
     p.numel() for p in model.parameters() if p.requires_grad)
 print(f"{total_trainable_params:,} training parameters.")
 
-ckpt = torch.hub.load_state_dict_from_url('https://github.com/lyuwenyu/storage/releases/download/v0.1/rtdetr_r50vd_6x_coco_from_paddle.pth')
-
-model.load_state_dict(ckpt['ema']['module'])
 model.eval().to(device)
 
 # Load video and read data.
