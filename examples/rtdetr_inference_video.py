@@ -5,8 +5,33 @@ import cv2
 import time
 import torch
 import numpy as np
+import argparse
+import os
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--model',
+    help='model name',
+    default='rtdetr_resnet50'
+)
+parser.add_argument(
+    '--input',
+    help='path to the input video',
+    default='../example_test_data/video_1.mp4'
+)
+parser.add_argument(
+    '--device',
+    help='cpu or cuda',
+    default=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+)
+args = parser.parse_args()
+
+np.random.seed(42)
+
+OUT_DIR = os.path.join('results', 'rt_detr')
+os.makedirs(OUT_DIR, exist_ok=True)
+
+device = args.device
 
 mscoco_category2name = {
     1: 'person',
@@ -97,7 +122,7 @@ mscoco_label2category = {v: k for k, v in mscoco_category2label.items()}
 COLORS = np.random.uniform(0, 255, size=(len(mscoco_category2name), 3))
 
 # Load model.
-model = load_model('rtdetr_resnet101')
+model = load_model(args.model)
 
 print(model)
 
@@ -111,23 +136,32 @@ print(f"{total_trainable_params:,} training parameters.")
 model.eval().to(device)
 
 # Load video and read data.
-cap = cv2.VideoCapture('../example_test_data/video_1.mp4')
+cap = cv2.VideoCapture(args.input)
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 vid_fps = int(cap.get(5))
+file_name = args.input.split(os.path.sep)[-1].split('.')[0]
+out = cv2.VideoWriter(
+    f"{OUT_DIR}/{file_name}.mp4", 
+    cv2.VideoWriter_fourcc(*'mp4v'), vid_fps, 
+    (frame_width, frame_height)
+)
 
 # Inference transforms.
 transform = transforms.Compose([
     transforms.ToPILImage(),
+    transforms.Resize((640, 640)),
     transforms.ToTensor(),
     transforms.ConvertImageDtype(torch.float)
 ])
 
+frame_count = 0
+total_fps = 0
 while cap.isOpened():
     ret, frame = cap.read()
     if ret:
+        frame_count += 1
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        image = cv2.resize(image, (640, 640))
         image = transform(image).unsqueeze(0).to(device)
 
         start_time = time.time()
@@ -135,7 +169,7 @@ while cap.isOpened():
             outputs = model(image)
         end_time = time.time()
         fps = 1 / (end_time - start_time)
-        print(f"FPS: {fps:.1f}")
+        total_fps += fps
 
         for i in range(len(outputs['pred_boxes'][0])):
             logits = outputs['pred_logits'][0][i]
@@ -177,6 +211,17 @@ while cap.isOpened():
                     color=color,
                     lineType=cv2.LINE_AA
                 )
+        cv2.putText(
+            frame,
+            text=f"FPS: {fps:.1f}",
+            org=(15, 25),
+            fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            fontScale=1.0,
+            thickness=2,
+            color=(0, 255, 0),
+            lineType=cv2.LINE_AA
+        )
+        out.write(frame)
         cv2.imshow('Image', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -190,5 +235,5 @@ cap.release()
 cv2.destroyAllWindows()
 
 # Calculate and print the average FPS.
-# avg_fps = total_fps / frame_count
-# print(f"Average FPS: {avg_fps:.3f}")
+avg_fps = total_fps / frame_count
+print(f"Average FPS: {avg_fps:.3f}")
