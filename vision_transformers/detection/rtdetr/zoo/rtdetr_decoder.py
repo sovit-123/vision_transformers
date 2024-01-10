@@ -1,4 +1,5 @@
-"""by lyuwenyu
+"""
+by lyuwenyu
 """
 
 import math 
@@ -14,13 +15,9 @@ from .denoising import get_contrastive_denoising_training_group
 from .utils import deformable_attention_core_func, get_activation, inverse_sigmoid
 from .utils import bias_init_with_prob
 
-
 from ..core import register
 
-
 __all__ = ['RTDETRTransformer']
-
-
 
 class MLP(nn.Module):
     def __init__(self, input_dim, hidden_dim, output_dim, num_layers, act='relu'):
@@ -34,8 +31,6 @@ class MLP(nn.Module):
         for i, layer in enumerate(self.layers):
             x = self.act(layer(x)) if i < self.num_layers - 1 else layer(x)
         return x
-
-
 
 class MSDeformableAttention(nn.Module):
     def __init__(self, embed_dim=256, num_heads=8, num_levels=4, num_points=4,):
@@ -61,7 +56,6 @@ class MSDeformableAttention(nn.Module):
 
         self._reset_parameters()
 
-
     def _reset_parameters(self):
         # sampling_offsets
         init.constant_(self.sampling_offsets.weight, 0)
@@ -82,7 +76,6 @@ class MSDeformableAttention(nn.Module):
         init.constant_(self.value_proj.bias, 0)
         init.xavier_uniform_(self.output_proj.weight)
         init.constant_(self.output_proj.bias, 0)
-
 
     def forward(self,
                 query,
@@ -140,7 +133,6 @@ class MSDeformableAttention(nn.Module):
         output = self.output_proj(output)
 
         return output
-
 
 class TransformerDecoderLayer(nn.Module):
     def __init__(self,
@@ -224,7 +216,6 @@ class TransformerDecoderLayer(nn.Module):
 
         return tgt
 
-
 class TransformerDecoder(nn.Module):
     def __init__(self, hidden_dim, decoder_layer, num_layers, eval_idx=-1):
         super(TransformerDecoder, self).__init__()
@@ -276,7 +267,6 @@ class TransformerDecoder(nn.Module):
             ) if self.training else inter_ref_bbox
 
         return torch.stack(dec_out_bboxes), torch.stack(dec_out_logits)
-
 
 @register
 class RTDETRTransformer(nn.Module):
@@ -387,7 +377,6 @@ class RTDETRTransformer(nn.Module):
         init.xavier_uniform_(self.query_pos_head.layers[0].weight)
         init.xavier_uniform_(self.query_pos_head.layers[1].weight)
 
-
     def _build_input_proj_layer(self, feat_channels):
         self.input_proj = nn.ModuleList()
         for in_channels in feat_channels:
@@ -467,7 +456,6 @@ class RTDETRTransformer(nn.Module):
 
         return anchors, valid_mask
 
-
     def _get_decoder_input(self,
                            memory,
                            spatial_shapes,
@@ -513,7 +501,6 @@ class RTDETRTransformer(nn.Module):
             target = torch.concat([denoising_class, target], 1)
 
         return target, reference_points_unact.detach(), enc_topk_bboxes, enc_topk_logits
-
 
     def forward(self, feats, targets=None):
 
@@ -563,7 +550,6 @@ class RTDETRTransformer(nn.Module):
                 out['dn_meta'] = dn_meta
 
         return out
-
 
     @torch.jit.unused
     def _set_aux_loss(self, outputs_class, outputs_coord):

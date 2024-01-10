@@ -1,4 +1,7 @@
-""""by lyuwenyu
+"""
+by lyuwenyu
+
+Reformatted by Sovit Ranjan Rath
 """
 
 import os
@@ -8,16 +11,14 @@ import importlib
 
 __all__ = ['GLOBAL_CONFIG', 'register', 'create', 'load_config', 'merge_config', 'merge_dict']
 
-
 GLOBAL_CONFIG = dict()
 INCLUDE_KEY = '__include__'
 
-
 def register(cls: type):
-    '''
+    """
     Args:
         cls (type): Module class to be registered.
-    '''
+    """
     if cls.__name__ in GLOBAL_CONFIG:
         raise ValueError('{} already registered'.format(cls.__name__))
 
@@ -32,14 +33,13 @@ def register(cls: type):
 
     return cls 
 
-
 def extract_schema(cls: type):
-    '''
+    """
     Args:
         cls (type),
     Return:
         Dict, 
-    '''
+    """
     argspec = inspect.getfullargspec(cls.__init__)
     arg_names = [arg for arg in argspec.args if arg != 'self']
     num_defualts = len(argspec.defaults) if argspec.defaults is not None else 0
@@ -66,11 +66,7 @@ def extract_schema(cls: type):
         
     return schame
 
-
-
 def create(type_or_name, **kwargs):
-    '''
-    '''
     assert type(type_or_name) in (type, str), 'create should be class or name.'
 
     name = type_or_name if isinstance(type_or_name, str) else type_or_name.__name__
@@ -147,11 +143,10 @@ def create(type_or_name, **kwargs):
 
     return cls(**cls_kwargs)
 
-
-
 def load_config(file_path, cfg=dict()):
-    '''load config
-    '''
+    """
+    load config
+    """
     _, ext = os.path.splitext(file_path)
     assert ext in ['.yml', '.yaml'], "only support yaml files for now"
 
@@ -175,11 +170,10 @@ def load_config(file_path, cfg=dict()):
 
     return merge_config(file_cfg, cfg)
 
-
-
 def merge_dict(dct, another_dct):
-    '''merge another_dct into dct
-    '''
+    """
+    merge another_dct into dct
+    """
     for k in another_dct:
         if (k in dct and isinstance(dct[k], dict) and isinstance(another_dct[k], dict)):
             merge_dict(dct[k], another_dct[k])

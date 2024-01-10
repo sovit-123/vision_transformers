@@ -21,11 +21,11 @@ from torch.utils.data.dataloader import DataLoader
 
 
 def init_distributed():
-    '''
+    """
     distributed setup
     args:
         backend (str), ('nccl', 'gloo')
-    '''
+    """
     try:
         # # https://pytorch.org/docs/stable/elastic/run.html
         # LOCAL_RANK = int(os.getenv('LOCAL_RANK', -1))  
@@ -50,8 +50,9 @@ def init_distributed():
 
 
 def setup_print(is_main):
-    '''This function disables printing when not in master process
-    '''
+    """
+    This function disables printing when not in master process
+    """
     import builtins as __builtin__
     builtin_print = __builtin__.print
 
@@ -70,28 +71,22 @@ def is_dist_available_and_initialized():
         return False
     return True
 
-
 def get_rank():
     if not is_dist_available_and_initialized():
         return 0
     return tdist.get_rank()
 
-
 def get_world_size():
     if not is_dist_available_and_initialized():
         return 1
     return tdist.get_world_size()
-
     
 def is_main_process():
     return get_rank() == 0
 
-
 def save_on_master(*args, **kwargs):
     if is_main_process():
         torch.save(*args, **kwargs)
-
-
 
 def warp_model(model, find_unused_parameters=False, sync_bn=False,):
     if is_dist_available_and_initialized():
@@ -99,7 +94,6 @@ def warp_model(model, find_unused_parameters=False, sync_bn=False,):
         model = nn.SyncBatchNorm.convert_sync_batchnorm(model) if sync_bn else model 
         model = DDP(model, device_ids=[rank], output_device=rank, find_unused_parameters=find_unused_parameters)
     return model
-
 
 def warp_loader(loader, shuffle=False):        
     if is_dist_available_and_initialized():
@@ -113,8 +107,6 @@ def warp_loader(loader, shuffle=False):
                             num_workers=loader.num_workers, )
     return loader
 
-
-
 def is_parallel(model) -> bool:
     # Returns True if model is of type DP or DDP
     return type(model) in (torch.nn.parallel.DataParallel, torch.nn.parallel.DistributedDataParallel)
@@ -124,13 +116,12 @@ def de_parallel(model) -> nn.Module:
     # De-parallelize a model: returns single-GPU model if model is of type DP or DDP
     return model.module if is_parallel(model) else model
 
-
 def reduce_dict(data, avg=True):
-    '''
+    """
     Args 
         data dict: input, {k: v, ...}
         avg bool: true
-    '''
+    """
     world_size = get_world_size()
     if world_size < 2:
         return data
@@ -151,8 +142,6 @@ def reduce_dict(data, avg=True):
     
     return _data
 
-
-
 def all_gather(data):
     """
     Run all_gather on arbitrary picklable data (not necessarily tensors)
@@ -171,8 +160,9 @@ def all_gather(data):
     
 import time 
 def sync_time():
-    '''sync_time
-    '''
+    """
+    sync_time
+    """
     if torch.cuda.is_available():
         torch.cuda.synchronize()
 

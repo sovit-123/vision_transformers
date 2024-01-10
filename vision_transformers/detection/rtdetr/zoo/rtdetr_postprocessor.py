@@ -9,9 +9,7 @@ import torchvision
 
 from ..core import register
 
-
 __all__ = ['RTDETRPostProcessor']
-
 
 @register
 class RTDETRPostProcessor(nn.Module):
@@ -68,7 +66,6 @@ class RTDETRPostProcessor(nn.Module):
             results.append(result)
         
         return results
-        
 
     def deploy(self, ):
         self.eval()

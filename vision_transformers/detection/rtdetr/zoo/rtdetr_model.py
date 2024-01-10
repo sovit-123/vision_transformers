@@ -1,4 +1,5 @@
-"""by lyuwenyu
+"""
+by lyuwenyu
 """
 
 import torch.nn as nn 
@@ -14,7 +15,6 @@ from .model_config import model_configs
 from torch.hub import load_state_dict_from_url
 
 __all__ = ['RTDETR', ]
-
 
 @register
 class RTDETR(nn.Module):

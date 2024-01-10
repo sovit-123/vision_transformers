@@ -15,7 +15,6 @@ from .box_ops import box_cxcywh_to_xyxy, generalized_box_iou
 
 from ..core import register
 
-
 @register
 class HungarianMatcher(nn.Module):
     """This class computes an assignment between the targets and the predictions of the network

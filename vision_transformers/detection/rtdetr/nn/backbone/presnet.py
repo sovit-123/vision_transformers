@@ -1,5 +1,9 @@
-'''by lyuwenyu
-'''
+"""
+by lyuwenyu
+
+Refactored by Sovit Ranjan Rath.
+"""
+
 import torch
 import torch.nn as nn 
 import torch.nn.functional as F 
@@ -30,7 +34,6 @@ donwload_url = {
     101: 'https://github.com/lyuwenyu/storage/releases/download/v0.1/ResNet101_vd_ssld_pretrained_from_paddle.pth',
 }
 
-
 class BasicBlock(nn.Module):
     expansion = 1
 
@@ -52,7 +55,6 @@ class BasicBlock(nn.Module):
         self.branch2b = ConvNormLayer(ch_out, ch_out, 3, 1, act=None)
         self.act = nn.Identity() if act is None else get_activation(act) 
 
-
     def forward(self, x):
         out = self.branch2a(x)
         out = self.branch2b(out)
@@ -65,7 +67,6 @@ class BasicBlock(nn.Module):
         out = self.act(out)
 
         return out
-
 
 class BottleNeck(nn.Module):
     expansion = 4
@@ -111,7 +112,6 @@ class BottleNeck(nn.Module):
 
         return out
 
-
 class Blocks(nn.Module):
     def __init__(self, block, ch_in, ch_out, count, stage_num, act='relu', variant='b'):
         super().__init__()
@@ -136,7 +136,6 @@ class Blocks(nn.Module):
         for block in self.blocks:
             out = block(out)
         return out
-
 
 @register
 class PResNet(nn.Module):
@@ -221,4 +220,3 @@ class PResNet(nn.Module):
             if idx in self.return_idx:
                 outs.append(x)
         return outs
-
