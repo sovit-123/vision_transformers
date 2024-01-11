@@ -1,5 +1,8 @@
-'''by lyuwenyu
-'''
+"""
+by lyuwenyu
+
+Refactored by Sovit Ranjan Rath
+"""
 
 import torch 
 import torch.nn as nn
@@ -24,7 +27,8 @@ class ConvNormLayer(nn.Module):
 
 
 class FrozenBatchNorm2d(nn.Module):
-    """copy and modified from https://github.com/facebookresearch/detr/blob/master/models/backbone.py
+    """
+    copy and modified from https://github.com/facebookresearch/detr/blob/master/models/backbone.py
     BatchNorm2d where the batch statistics and the affine parameters are fixed.
     Copy-paste from torchvision.misc.ops with added eps before rqsrt,
     without which any other models than torchvision.models.resnet[18,34,50,101]
@@ -66,10 +70,10 @@ class FrozenBatchNorm2d(nn.Module):
             "{num_features}, eps={eps}".format(**self.__dict__)
         )
 
-
 def get_activation(act: str, inpace: bool=True):
-    '''get activation
-    '''
+    """
+    get activation
+    """
     act = act.lower()
     
     if act == 'silu':

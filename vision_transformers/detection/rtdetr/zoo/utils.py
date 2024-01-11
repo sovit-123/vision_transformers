@@ -1,4 +1,5 @@
-"""by lyuwenyu
+"""
+by lyuwenyu
 """
 
 import math
@@ -6,11 +7,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F 
 
-
 def inverse_sigmoid(x: torch.Tensor, eps: float=1e-5) -> torch.Tensor:
     x = x.clip(min=0., max=1.)
     return torch.log(x.clip(min=eps) / (1 - x).clip(min=eps))
-
 
 def deformable_attention_core_func(value, value_spatial_shapes, sampling_locations, attention_weights):
     """
@@ -55,18 +54,16 @@ def deformable_attention_core_func(value, value_spatial_shapes, sampling_locatio
 
     return output.permute(0, 2, 1)
 
-
 import math 
 def bias_init_with_prob(prior_prob=0.01):
     """initialize conv/fc bias value according to a given probability value."""
     bias_init = float(-math.log((1 - prior_prob) / prior_prob))
     return bias_init
 
-
-
 def get_activation(act: str, inpace: bool=True):
-    '''get activation
-    '''
+    """
+    get activation
+    """
     act = act.lower()
     
     if act == 'silu':

@@ -5,7 +5,6 @@ https://github.com/facebookresearch/detr/blob/main/models/detr.py
 by lyuwenyu
 """
 
-
 import torch 
 import torch.nn as nn 
 import torch.nn.functional as F 
@@ -17,11 +16,10 @@ from .box_ops import box_cxcywh_to_xyxy, box_iou, generalized_box_iou
 from ..misc.dist import get_world_size, is_dist_available_and_initialized
 from ..core import register
 
-
-
 @register
 class SetCriterion(nn.Module):
-    """ This class computes the loss for DETR.
+    """ 
+    This class computes the loss for DETR.
     The process happens in two steps:
         1) we compute hungarian assignment between ground truth boxes and the outputs of the model
         2) we supervise each pair of matched ground-truth / prediction (supervise class and box)
@@ -30,7 +28,8 @@ class SetCriterion(nn.Module):
     __inject__ = ['matcher', ]
 
     def __init__(self, matcher, weight_dict, losses, alpha=0.2, gamma=2.0, eos_coef=1e-4, num_classes=80):
-        """ Create the criterion.
+        """ 
+        Create the criterion.
         Parameters:
             num_classes: number of object categories, omitting the special no-object category
             matcher: module able to compute a matching between targets and proposals
@@ -53,7 +52,8 @@ class SetCriterion(nn.Module):
 
 
     def loss_labels(self, outputs, targets, indices, num_boxes, log=True):
-        """Classification loss (NLL)
+        """
+        Classification loss (NLL)
         targets dicts must contain the key "labels" containing a tensor of dim [nb_target_boxes]
         """
         assert 'pred_logits' in outputs
@@ -226,7 +226,8 @@ class SetCriterion(nn.Module):
         return loss_map[loss](outputs, targets, indices, num_boxes, **kwargs)
 
     def forward(self, outputs, targets):
-        """ This performs the loss computation.
+        """ 
+        This performs the loss computation.
         Parameters:
              outputs: dict of tensors, see the output specification of the model for the format
              targets: list of dicts, such that len(targets) == batch_size.
@@ -314,10 +315,6 @@ class SetCriterion(nn.Module):
         
         return dn_match_indices
 
-
-
-
-
 @torch.no_grad()
 def accuracy(output, target, topk=(1,)):
     """Computes the precision@k for the specified values of k"""
@@ -335,6 +332,3 @@ def accuracy(output, target, topk=(1,)):
         correct_k = correct[:k].view(-1).float().sum(0)
         res.append(correct_k.mul_(100.0 / batch_size))
     return res
-
-
-

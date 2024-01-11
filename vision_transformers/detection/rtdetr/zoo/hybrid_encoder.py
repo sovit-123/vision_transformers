@@ -1,5 +1,6 @@
-'''by lyuwenyu
-'''
+"""
+by lyuwenyu
+"""
 
 import copy
 import torch 
@@ -10,10 +11,7 @@ from .utils import get_activation
 
 from ..core import register
 
-
 __all__ = ['HybridEncoder']
-
-
 
 class ConvNormLayer(nn.Module):
     def __init__(self, ch_in, ch_out, kernel_size, stride, padding=None, bias=False, act=None):
@@ -30,7 +28,6 @@ class ConvNormLayer(nn.Module):
 
     def forward(self, x):
         return self.act(self.norm(self.conv(x)))
-
 
 class RepVggBlock(nn.Module):
     def __init__(self, ch_in, ch_out, act='relu'):
@@ -84,7 +81,6 @@ class RepVggBlock(nn.Module):
         t = (gamma / std).reshape(-1, 1, 1, 1)
         return kernel * t, beta - running_mean * gamma / std
 
-
 class CSPRepLayer(nn.Module):
     def __init__(self,
                  in_channels,
@@ -110,7 +106,6 @@ class CSPRepLayer(nn.Module):
         x_1 = self.bottlenecks(x_1)
         x_2 = self.conv2(x)
         return self.conv3(x_1 + x_2)
-
 
 # transformer
 class TransformerEncoderLayer(nn.Module):
@@ -160,7 +155,6 @@ class TransformerEncoderLayer(nn.Module):
             src = self.norm2(src)
         return src
 
-
 class TransformerEncoder(nn.Module):
     def __init__(self, encoder_layer, num_layers, norm=None):
         super(TransformerEncoder, self).__init__()
@@ -177,7 +171,6 @@ class TransformerEncoder(nn.Module):
             output = self.norm(output)
 
         return output
-
 
 @register
 class HybridEncoder(nn.Module):

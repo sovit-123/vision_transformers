@@ -1,4 +1,5 @@
-from vision_transformers.detection.rtdetr.src.zoo.rtdetr_model import load_model
+# from vision_transformers.detection.rtdetr.src.zoo.rtdetr_model import load_model
+from vision_transformers.detection.rtdetr import load_model
 from torchvision import transforms
 
 import cv2
