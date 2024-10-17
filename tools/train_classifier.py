@@ -15,6 +15,7 @@ from utils.general import (
 from utils.load_model import create_model
 from utils.logging import set_log, log
 from vision_transformers.models import vit
+from torch.optim.lr_scheduler import MultiStepLR
 
 seed = 42
 torch.manual_seed(seed)
@@ -71,6 +72,24 @@ parser.add_argument(
     default=None,
     type=str,
     help='set result dir name in runs/training/, (default res#)'
+)
+parser.add_argument(
+    '-opt', '--optim',
+    default='sgd',
+    type=str,
+    help='choose optimizer, sgd or adam'
+)
+parser.add_argument(
+    '--scheduler',
+    nargs='+',
+    type=int,
+    help='whether to use multistep scheduler'
+)
+parser.add_argument(
+    '-j', '--workers',
+    default=4,
+    type=int,
+    help='number of parallel workers for data loaders'
 )
 args = parser.parse_args()
 
@@ -138,6 +157,8 @@ if __name__ == '__main__':
     OUT_DIR = set_training_dir(args.name)
     set_log(OUT_DIR)
 
+    log(args)
+
     if args.data_dir == None:
         # Load the training and validation datasets.
         dataset_train, \
@@ -147,7 +168,8 @@ if __name__ == '__main__':
                 train_dir=args.train_dir,
                 valid_dir=args.valid_dir,
                 batch_size=args.batch,
-                image_size=224
+                image_size=224,
+                num_workers=args.workers
             )
     else:
         dataset_train, \
@@ -157,7 +179,8 @@ if __name__ == '__main__':
                 data_dir=args.data_dir[0],
                 valid_split=float(args.data_dir[1]),
                 batch_size=args.batch,
-                image_size=224
+                image_size=224,
+                num_workers=args.workers
             )
     log(f"[INFO]: Number of training images: {len(dataset_train)}")
     log(f"[INFO]: Number of validation images: {len(dataset_valid)}")
@@ -188,9 +211,20 @@ if __name__ == '__main__':
     log(f"{total_trainable_params:,} training parameters.")
 
     # Optimizer.
-    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+    print('Using optimizer: ', args.optim)
+    if args.optim == 'sgd':
+        optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+    if args.optim == 'adam':
+        optimizer = optim.Adam(model.parameters(), lr=lr)
     # Loss function.
     criterion = nn.CrossEntropyLoss()
+
+    if args.scheduler is not None:
+        print('Initializing scheduler')
+        scheduler = MultiStepLR(
+            optimizer=optimizer, 
+            milestones=args.scheduler
+        )
 
     # Initialize SaveBestModel class
     save_best_model = SaveBestModel()
@@ -224,5 +258,8 @@ if __name__ == '__main__':
         log(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f}")
         log(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f}")
         log('-'*50)
+
+        if args.scheduler is not None:
+            scheduler.step()
         
     log('TRAINING COMPLETE')
